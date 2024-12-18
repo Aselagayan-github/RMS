@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration form</title>
+    <meta name="author" content="Asela Gayan" />
+    <link rel="shortcut icon" href="" />
+    <!-- Bootstrap CSS link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            padding: 20px;
+            background-color: #101011;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            max-width: 800px;
+        }
+
+        h2 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            color: rgb(21, 253, 110); 
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: rgb(13, 250, 159); 
+        }
+
+        .btn-margin {
+            margin-right: 50px;
+        }
+
+        #userTableBody button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<!-- Main Content -->
+<div class="container">
+    <a class="navbar-brand logo" href="#home">
+        <a href="{% url 'login' %}" style="position: relative;right: -835px;font-size: larger;font-weight: bolder;text-decoration: solid;color: rgb(13, 250, 159);">LOGIN</a>
+    </a>
+    <!-- Add or Update User Form -->
+    <h2 style="text-align:center;">Registration Form</h2>
+    <form id="userForm" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="idno" class="form-label">User Id:</label>
+            <input type="text" class="form-control" id="idno" name="idno" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="Address" class="form-label">Address:</label>
+            <input type="text" class="form-control" id="Address" name="Address" required>
+        </div>
+        <div class="mb-3">
+            <label for="Contactno" class="form-label">Contact no:</label>
+            <input type="text" class="form-control" id="Contactno" name="Contactno" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="gmail" class="form-label">Gmail:</label>
+            <input type="email" class="form-control" id="gmail" name="gmail" required>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="Usertype" class="form-label">User Type:</label>
+            <select class="form-select" id="Usertype" name="Usertype" required>
+                <option value="Not Selected">Select user</option>
+                <option value="Admin">Admin</option>
+                <option value="Doctor">Customer</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="type" class="form-label">Type:</label>
+            <select class="form-select" id="type" name="type" required>
+                <option value="">Select type</option>
+                <option value="breakfast">Breakfast</option>
+                <option value="Not_Certified">Lunch</option>
+                <option value="Not_Certified">Dinner</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="tabletype" class="form-label">Table Type:</label>
+            <select class="form-select" id="tabletype" name="tabletype" required>
+                <option value="">Select Table Type</option>
+                <option value="vip">VIP</option>
+                <option value="luxary">Luxary</option>
+                <option value="modern">Modern</option>
+                <option value="buget">Buget</option>
+                <option value="low">Low</option>
+
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-margin">Register</button>
+    </form>
+</div>
+
+<!-- Success Message Popup -->
+{% if messages %}
+    <script>
+        alert("{{ some_variable|first }}");
+    </script>
+{% endif %}
+
+<!-- Bootstrap JS and Popper.js scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
