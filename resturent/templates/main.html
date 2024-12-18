@@ -42,10 +42,10 @@
                     <!--/.navbar-header-->
 
                     <ul class="nav navbar-nav">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="menu.html">Our Menus</a></li>
-                        <li><a href="blog.html">Blog Entries</a></li>
-                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="{% url 'main' %}">Home</a></li>
+                        <li><a href="{% url 'menu' %}">Our Menus</a></li>
+                        <li><a href="{% url 'blog' %}">Blog Entries</a></li>
+                        <li><a href="{% url 'contact' %}">Contact Us</a></li>
                         <li><a href="#" style="
                             border-color: black;
                             border-style: double;
@@ -116,7 +116,7 @@
             <div class="row">
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="service-item">
-                        <a href="menu.html"> 
+                        <a href="{% url 'menu' %}"> 
                         <img src="{% static 'resturent/img/cook_breakfast.png' %}" alt="Breakfast">
                         <h4>Breakfast</h4>
                         </a>
@@ -124,7 +124,7 @@
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="service-item">
-                        <a href="menu.html">
+                        <a href="{% url 'menu' %}">
                         <img src="{% static 'resturent/img/cook_lunch.png' %}" alt="Lunch">
                         <h4>Lunch</h4>
                         </a>
@@ -132,7 +132,7 @@
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="service-item">
-                        <a href="menu.html">
+                        <a href="{% url 'menu' %}">
                         <img src="{% static 'resturent/img/cook_dinner.png' %}" alt="Dinner"> 
                         <h4>Dinner</h4>
                         </a>
@@ -140,7 +140,7 @@
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="service-item">
-                        <a href="menu.html">
+                        <a href="{% url 'menu' %}">
                         <img src="{% static 'resturent/img/cook_dessert.png' %}" alt="Desserts">
                         <h4>Desserts</h4>
                         </a>
@@ -233,23 +233,6 @@
             </div>
         </div>
     </section>
-
-
-
-    <section class="get-app">
-        <div class="container">
-            <div class="row">
-                <div class="heading">
-                    <h2>Get application for your phone</h2>
-                </div>
-                <div class="primary-white-button">
-                    <a href="#">Download now</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
 
     <section class="featured-food">
         <div class="container">
