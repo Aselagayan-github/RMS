@@ -35,60 +35,55 @@ def login(request):
 def register(request):
     if request.method == 'POST':
         # Get form data
-        idno = request.POST['idno']
-        name = request.POST['name']
-        address = request.POST['Address']
-        contactno = request.POST['Contactno']
-        gmail = request.POST['gmail']
-        usertype = request.POST['Usertype']
-        type = request.POST['type']
-        tabletype = request.POST['tabletype']
-        password = request.POST['password']
+        idno = request.POST.get('idno')
+        name = request.POST.get('name')
+        address = request.POST.get('Address')
+        contact_no = request.POST.get('Contactno')
+        gmail = request.POST.get('gmail')
+        user_type = request.POST.get('Usertype')
+        table_type = request.POST.get('tabletype')
+        type_ = request.POST.get('type')
+        password = request.POST.get('password')
 
-        # Save user data in MongoDB
+        if not all([idno, name, address, contact_no, gmail, user_type, table_type, type_, password]):
+            messages.error(request, 'All fields are required. Please fill in all fields.')
+            return render(request, 'register.html')
+
+        # Save user data to MongoDB
         user_data = {
             'idno': idno,
             'name': name,
             'address': address,
-            'contactno': contactno,
+            'contact_no': contact_no,
             'gmail': gmail,
-            'usertype': usertype,
-            'type': type,
-            'tabletype': tabletype,
-            'password': password
+            'user_type': user_type,
+            'table_type': table_type,
+            'type': type_,
+            'password': password,
         }
-        
-        # Insert user data into MongoDB
         users_collection.insert_one(user_data)
 
-        # Send confirmation email to the user
-        send_email(gmail, name)
+        # Send confirmation email
+        try:
+            with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as smtp:
+                smtp.starttls()
+                smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
 
-        # Show success message
-        messages.success(request, "Registration successful! Check your email for confirmation.")
+                # Email content
+                subject = "Registration Successful"
+                body = f"Hello {name},\n\nThank you for registering!\n\nBest regards,\nTeam"
+                msg = MIMEMultipart()
+                msg['From'] = EMAIL_ADDRESS
+                msg['To'] = gmail
+                msg['Subject'] = subject
+                msg.attach(MIMEText(body, 'plain'))
 
-        # Redirect to login page
+                smtp.sendmail(EMAIL_ADDRESS, gmail, msg.as_string())
+        except Exception as e:
+            print("Error sending email:", e)
+
+        # Show success message and redirect to login page
+        messages.success(request, 'Registration successful! A confirmation email has been sent.')
         return redirect('login')
     
     return render(request, 'register.html')
-
-def send_email(to_email, user_name):
-    # Create the email content
-    subject = "Registration Successful"
-    body = f"Hello {user_name},\n\nYour registration was successful! Welcome to our system."
-
-    msg = MIMEMultipart()
-    msg['From'] = EMAIL_ADDRESS
-    msg['To'] = to_email
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
-
-    # Send the email
-    try:
-        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as server:
-            server.starttls()
-            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-            text = msg.as_string()
-            server.sendmail(EMAIL_ADDRESS, to_email, text)
-    except Exception as e:
-        print(f"Error sending email: {e}")

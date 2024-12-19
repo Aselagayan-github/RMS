@@ -118,9 +118,11 @@
 
 <!-- Success Message Popup -->
 {% if messages %}
-    <script>
-        alert("{{ some_variable|first }}");
-    </script>
+    {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
 {% endif %}
 
 <!-- Bootstrap JS and Popper.js scripts -->
