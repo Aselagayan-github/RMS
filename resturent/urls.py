@@ -8,6 +8,6 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('login/', views.login, name='login'),
     path('register/', views.register, name='register'),
-    path('admind/', views.admin_view, name='admind'),  # Define this view
-    path('customer/', views.customer_view, name='customer'),  # Define this view
+    path('admindashboard/', views.admin_view, name='admindashboard'),  # Define this view
+    path('customerdashboard/', views.customer_view, name='customerdashboard'),  # Define this view
 ]

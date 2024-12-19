@@ -47,9 +47,9 @@ def login(request):
         if user:
             # If user exists and user type matches
             if user['usertype'] == 'Admin':
-                return redirect('admind')
+                return redirect('admindashboard')
             elif user['usertype'] == 'Customer':
-                return redirect('customer')
+                return redirect('customerdashboard')
             else:
                 messages.error(request, 'Invalid user type.')
                 return render(request, 'login.html')
@@ -60,10 +60,10 @@ def login(request):
     return render(request, 'login.html')
 
 def admin_view(request):
-    return render(request, 'admind.html')
+    return render(request, 'admindashboard.html')
 
 def customer_view(request):
-    return render(request, 'customer.html')
+    return render(request, 'customerdashboard.html')
 
 def register(request):
     if request.method == 'POST':
