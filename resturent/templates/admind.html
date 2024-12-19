@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        .admin-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .admin-links {
+            list-style: none;
+            padding: 0;
+        }
+        .admin-links li {
+            margin-bottom: 10px;
+        }
+        .admin-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .admin-links a:hover {
+            text-decoration: underline;
+        }
+        .logout {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-content">
+            <h1>Welcome, Admin</h1>
+            <p>Manage your system from the dashboard below:</p>
+            <ul class="admin-links">
+                <li><a href="#">View Users</a></li>
+                <li><a href="#">Manage Orders</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#">Reports</a></li>
+            </ul>
+            <a href="" class="logout">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

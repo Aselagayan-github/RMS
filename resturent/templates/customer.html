@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        .customer-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .customer-links {
+            list-style: none;
+            padding: 0;
+        }
+        .customer-links li {
+            margin-bottom: 10px;
+        }
+        .customer-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .customer-links a:hover {
+            text-decoration: underline;
+        }
+        .logout {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="customer-content">
+            <h1>Welcome, Customer</h1>
+            <p>Enjoy shopping and managing your account:</p>
+            <ul class="customer-links">
+                <li><a href="#">View Products</a></li>
+                <li><a href="#">My Orders</a></li>
+                <li><a href="#">Update Profile</a></li>
+                <li><a href="#">Contact Support</a></li>
+            </ul>
+            <a href="{% url 'logout' %}" class="logout">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

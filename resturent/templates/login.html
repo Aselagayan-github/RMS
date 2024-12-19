@@ -141,20 +141,29 @@ button{
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form>
+    <form method="POST">
+        {% csrf_token %}
         <h3>Login Here</h3>
-
+    
         <label for="username">Username</label>
-        <input type="text" placeholder="Username" id="username">
-
+        <input type="text" placeholder="Username" id="username" name="username" required>
+    
         <label for="password">Password</label>
-        <input type="password" placeholder="Password" id="password">
-
-        <button onclick="loginUser()">Log In</button>
+        <input type="password" placeholder="Password" id="password" name="password" required>
+    
+        <label for="Usertype" class="form-label">User Type:</label>
+        <select class="form-select" id="Usertype" name="Usertype" required>
+            <option value="Not Selected">Select user</option>
+            <option value="Admin">Admin</option>
+            <option value="Customer">Customer</option>
+        </select>
+    
+        <button type="submit">Log In</button>
         <button><a href="{% url 'register' %}" style="color: #080710; text-decoration: none;">Register Now</a></button>
+    
         <div class="social">
-          <div class="go"><i class="fab fa-google"></i>  Google</div>
-          <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
+            <div class="go"><i class="fab fa-google"></i> Google</div>
+            <div class="fb"><i class="fab fa-facebook"></i> Facebook</div>
         </div>
     </form>
 </body>
