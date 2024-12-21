@@ -74,11 +74,9 @@ def register(request):
         contactno = request.POST['Contactno']
         gmail = request.POST['gmail']
         usertype = request.POST['Usertype']
-        type = request.POST['type']
-        tabletype = request.POST['tabletype']
         password = request.POST['password']
 
-        if not all([idno, name, address, contactno, gmail, usertype, type, tabletype, password]):
+        if not all([idno, name, address, contactno, gmail, usertype, password]):
             messages.error(request, 'All fields are required. Please fill in all fields.')
             return render(request, 'register.html')
 
@@ -90,8 +88,6 @@ def register(request):
             'contactno': contactno,
             'gmail': gmail,
             'usertype': usertype,
-            'type': type,
-            'tabletype': tabletype,
             'password': password
         }
         

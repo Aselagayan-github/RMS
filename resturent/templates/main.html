@@ -5,11 +5,12 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>HUNGRYNEST-Resturent-web</title>
+        <title>HUNGRYNEST-Resturent-website</title>
+
+        <meta name="author" content="Asela Gayan" />
+        <link rel="shortcut icon" href="{% static 'logo/img/hungrynestlogo.png' %}" />
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
         <link rel="stylesheet" href="{% static 'resturent/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'resturent/css/bootstrap-theme.min.css' %}">
         <link rel="stylesheet" href="{% static 'resturent/css/fontAwesome.css' %}">
@@ -28,7 +29,8 @@
 <body>
     <div class="header">
         <div class="container">
-            <a href="#" class="navbar-brand scroll-top">HUNGRYNEST</a>
+            <a href="{% url 'main' %}" class="navbar-brand scroll-top">HUNGRYNEST</a>
+            <a href="{% url 'main' %}"><img src="{% static 'logo/img/hungrynestlogo.png' %}" alt="Final Logo" height="130" style="position: absolute; top: 10px; left: 28px;"/></a>
             <nav class="navbar navbar-inverse" role="navigation">
                 <div id="main-nav" class="collapse navbar-collapse">
                     <div class="navbar-header">
@@ -44,13 +46,13 @@
                     <ul class="nav navbar-nav">
                         <li><a href="{% url 'main' %}">Home</a></li>
                         <li><a href="{% url 'menu' %}">Our Menus</a></li>
-                        <li><a href="{% url 'blog' %}">Blog Entries</a></li>
+                        <li><a href="{% url 'blog' %}">Blog Posts</a></li>
                         <li><a href="{% url 'contact' %}">Contact Us</a></li>
                         <li><a href="{% url 'login' %}" style="
                             border-color: black;
                             border-style: double;
                             border-width: thin;
-                            border-radius: 5px;">LOGIN</a></li>
+                            border-radius: 5px;">LOGIN NOW</a></li>
                     </ul>
                 </div>
                 <!--/.navbar-collapse-->
@@ -67,10 +69,10 @@
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <h4>Here you can find delecious foods</h4>
-                    <h2>Asian Restaurant</h2>
-                    <p>Quisque nec nibh id lacus fringilla eleifend sed sit amet sem. Donec lectus odio, mollis a nisl non, tempor interdum nisl.</p>
+                    <h2>HUNGRYNEST RESTURENT</h2>
+                    <p>Experience Deliciousness Like Never Before and Get the Health Benefits of Eating Fresh and Local Ingredients Come to HungryNest Resturent.</p>
                     <div class="primary-button">
-                        <a href="{% url 'login' %}" class="scroll-link" data-id="book-table">Order Right Now</a>
+                        <a href="{% url 'login' %}" class="scroll-link" data-id="book-table">Order Now</a>
                     </div>
                 </div>
             </div>
@@ -92,11 +94,11 @@
                         <h4>We cook delecious</h4>
                         <div class="contact-content">
                             <span>You can call us on:</span>
-                            <h6>+ 1234 567 8910</h6>
+                            <h6>+ 94 769144426</h6>
                         </div>
                         <span>or</span>
                         <div class="primary-white-button">
-                            <a href="#" class="scroll-link" data-id="book-table">Order Now</a>
+                            <a href="#" class="scroll-link" data-id="book-table">Explore Our Menu</a>
                         </div>
                     </div>
                 </div>
@@ -238,7 +240,7 @@
         <div class="container">
             <div class="row">
                 <div class="heading">
-                    <h2>Weekly Featured Food</h2>
+                    <h2>Weekly Special Offers</h2>
                 </div>
             </div>
             <div class="row">
@@ -246,9 +248,9 @@
                     <div class="food-item">
                         <h2>Breakfast</h2>
                         <img src="{% static 'resturent/img/breakfast_item.jpg' %}" alt="">
-                        <div class="price">$4.50</div>
+                        <div class="price">$6.99 (Was $8.99)</div>
                         <div class="text-content">
-                            <h4>Kale Chips Art Party</h4>
+                            <h4>Fluffy Pancakes</h4>
                             <p>Dreamcatcher squid ennui cliche chicharros nes echo  small batch jean shorts hexagon street art knausgaard wolf...</p>
                         </div>
                     </div>
@@ -257,9 +259,9 @@
                     <div class="food-item">
                         <h2>Lunch</h2>
                         <img src="{% static 'resturent/img/lunch_item.jpg' %}" alt="">
-                        <div class="price">$7.50</div>
+                        <div class="price">$7.49 (Was $9.99)</div>
                         <div class="text-content">
-                            <h4>Taiyaki Gastro Tousled</h4>
+                            <h4>Veggie Omelette Combo</h4>
                             <p>Dreamcatcher squid ennui cliche chicharros nes echo  small batch jean shorts hexagon street art knausgaard wolf...</p>
                         </div>
                     </div>
@@ -268,7 +270,7 @@
                     <div class="food-item">
                         <h2>Dinner</h2>
                         <img src="{% static 'resturent/img/dinner_item.jpg' %}" alt="">
-                        <div class="price">$12.50</div>
+                        <div class="price">$5.99 (Was $7.49)</div>
                         <div class="text-content">
                             <h4>Batch Squid Jean Shorts</h4>
                             <p>Dreamcatcher squid ennui cliche chicharros nes echo  small batch jean shorts hexagon street art knausgaard wolf...</p>
@@ -294,10 +296,10 @@
                 <div class="col-md-6">
                     <div class="blog-post">
                         <img src="{% static 'resturent/img/blog_post_01.jpg' %}" alt="">
-                        <div class="date">26 Oct 2017</div>
+                        <div class="date">26 Oct 2022</div>
                         <div class="right-content">
-                            <h4>Stumptown Tofu Schlitz</h4>
-                            <span>Branding / Admin</span>
+                            <h4>5 Best Dishes to Try at HungryNest</h4>
+                            <span>CEO / Admin</span>
                             <p>Skateboard iceland twee tofu shaman crucifix vice before they sold out corn hole occupy drinking vinegar chambra meggings kale chips hexagon...</p>
                             <div class="text-button">
                                 <a href="#">Continue Reading</a>
@@ -308,10 +310,10 @@
                 <div class="col-md-6">
                     <div class="blog-post">
                         <img src="{% static 'resturent/img/blog_post_02.jpg' %}" alt="">
-                        <div class="date">21 Oct 2017</div>
+                        <div class="date">25 Nov 2024</div>
                         <div class="right-content">
-                            <h4>Succulents Hashtag Folk</h4>
-                            <span>Branding / Admin</span>
+                            <h4>Wines with Your Dinner</h4>
+                            <span>Branding / Customer</span>
                             <p>Skateboard iceland twee tofu shaman crucifix vice before they sold out corn hole occupy drinking vinegar chambra meggings kale chips hexagon...</p>
                             <div class="text-button">
                                 <a href="#">Continue Reading</a>
@@ -322,9 +324,9 @@
                 <div class="col-md-6">
                     <div class="blog-post">
                         <img src="{% static 'resturent/img/blog_post_03.jpg' %}" alt="">
-                        <div class="date">11 Oct 2017</div>
+                        <div class="date">11 Des 2024</div>
                         <div class="right-content">
-                            <h4>Knaus Sriracha Pinterest</h4>
+                            <h4>Eating Fresh Fruits</h4>
                             <span>Dessert / Chef</span>
                             <p>Skateboard iceland twee tofu shaman crucifix vice before they sold out corn hole occupy drinking vinegar chambra meggings kale chips hexagon...</p>
                             <div class="text-button">
