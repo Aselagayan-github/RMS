@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-margin { margin-top: 15px; }
+        .edit-form { display: none; margin-top: 20px; }
+    </style>
+</head>
+<body class="container mt-5">
+    <h2>User Management</h2>
+
+    <!-- Search bar -->
+    <form method="get" class="mb-4">
+        <input type="text" name="search" class="form-control" placeholder="Search by name or email..." value="{{ request.GET.search }}">
+    </form>
+
+    <!-- Create User Form -->
+    <form method="post" action="{% url 'usermanagement' %}">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="idno" placeholder="ID Number" required>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="name" placeholder="Full Name" required>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="Address" placeholder="Address" required>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="Contactno" placeholder="Contact Number" required>
+            </div>
+            <div class="col-md-4">
+                <input type="email" class="form-control" name="gmail" placeholder="Email" required>
+            </div>
+            <div class="col-md-4">
+                <select name="Usertype" class="form-select" required>
+                    <option value="">Select User</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Customer">Customer</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <input type="password" class="form-control" name="password" placeholder="Password" required>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-success btn-margin">Register</button>
+            </div>
+        </div>
+    </form>
+
+    <hr>
+
+    <!-- Users Table -->
+    <h4 class="mt-4">User List</h4>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th><th>Name</th><th>Address</th><th>Contact</th><th>Email</th><th>User Type</th><th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.idno }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.contactno }}</td>
+                <td>{{ user.gmail }}</td>
+                <td>{{ user.usertype }}</td>
+                <td>
+                    <a href="?edit={{ user._id }}" class="btn btn-sm btn-primary">Update</a>
+                    <a href="{% url 'delete_user' user._id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Edit User Form -->
+    {% if edit_user %}
+    <div class="edit-form">
+        <h5>Edit User</h5>
+        <form method="post" action="{% url 'usermanagement' %}?edit={{ edit_user._id }}">
+            {% csrf_token %}
+            <input type="hidden" name="edit_id" value="{{ edit_user._id }}">
+            <div class="row g-3">
+                <div class="col-md-4"><input class="form-control" name="idno" value="{{ edit_user.idno }}" required></div>
+                <div class="col-md-4"><input class="form-control" name="name" value="{{ edit_user.name }}" required></div>
+                <div class="col-md-4"><input class="form-control" name="Address" value="{{ edit_user.address }}" required></div>
+                <div class="col-md-4"><input class="form-control" name="Contactno" value="{{ edit_user.contactno }}" required></div>
+                <div class="col-md-4"><input class="form-control" name="gmail" value="{{ edit_user.gmail }}" required></div>
+                <div class="col-md-4">
+                    <select name="Usertype" class="form-select" required>
+                        <option value="Admin" {% if edit_user.usertype == 'Admin' %}selected{% endif %}>Admin</option>
+                        <option value="Customer" {% if edit_user.usertype == 'Customer' %}selected{% endif %}>Customer</option>
+                    </select>
+                </div>
+                <div class="col-md-4"><input class="form-control" name="password" value="{{ edit_user.password }}" required></div>
+                <div class="col-md-4"><button type="submit" class="btn btn-warning">Update</button></div>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</body>
+</html>

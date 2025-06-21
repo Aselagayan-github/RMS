@@ -10,4 +10,6 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('admindashboard/', views.admin_view, name='admindashboard'),  # Define this view
     path('customerdashboard/', views.customer_view, name='customerdashboard'),  # Define this view
+    path('usermanagement/', views.usermanage_view, name='usermanagement'),
+
 ]
