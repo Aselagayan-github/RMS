@@ -6,11 +6,13 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from bson.objectid import ObjectId
+from django.http import JsonResponse
 
 # MongoDB client setup
 client = MongoClient('mongodb://localhost:27017/')
 db = client['resturent']
 users_collection = db['users']
+order_collection = db['order_table']
 
 # Email credentials
 EMAIL_ADDRESS = 'aselagayan1010@gmail.com'
@@ -130,48 +132,33 @@ def send_email(to_email, user_name):
     except Exception as e:
         print(f"Error sending email: {e}")
 
-def usermanage_view(request):
-    search_query = request.GET.get('search', '')
-    edit_id = request.GET.get('edit')
+# Save new order
+def order_processing_view(request):
+    if request.method == 'GET':
+        # Fetch all orders from MongoDB
+        orders = list(order_collection.find())
+        for order in orders:
+            order['_id'] = str(order['_id'])  # Convert ObjectId to string for frontend
+        return render(request, 'order_processing.html', {'orders': orders})
 
-    # POST: create or update
+
+@csrf_exempt
+def add_order(request):
     if request.method == 'POST':
-        data = {
-            'idno': request.POST['idno'],
-            'name': request.POST['name'],
-            'address': request.POST['Address'],
-            'contactno': request.POST['Contactno'],
-            'gmail': request.POST['gmail'],
-            'usertype': request.POST['Usertype'],
-            'password': request.POST['password'],
+        data = json.loads(request.body)
+        order_data = {
+            'customer': data.get('customer'),
+            'time': data.get('time'),
+            'status': data.get('status')
         }
-        if 'edit_id' in request.POST:
-            # UPDATE
-            users_collection.update_one({'_id': ObjectId(request.POST['edit_id'])}, {'$set': data})
-            messages.success(request, "User updated successfully.")
-        else:
-            # CREATE
-            users_collection.insert_one(data)
-            messages.success(request, "User added successfully.")
-        return redirect('usermanagement')
-
-    # GET: list users
-    if search_query:
-        users = users_collection.find({
-            "$or": [
-                {'name': {'$regex': search_query, '$options': 'i'}},
-                {'gmail': {'$regex': search_query, '$options': 'i'}}
-            ]
-        })
-    else:
-        users = users_collection.find()
-
-    edit_user = users_collection.find_one({'_id': ObjectId(edit_id)}) if edit_id else None
-    return render(request, 'usermanagement.html', {'users': users, 'edit_user': edit_user})
+        result = order_collection.insert_one(order_data)
+        return JsonResponse({'success': True, 'order_id': str(result.inserted_id)})
 
 
-def delete_user(request, user_id):
-    users_collection.delete_one({'_id': ObjectId(user_id)})
-    messages.success(request, "User deleted successfully.")
-    return redirect('usermanagement')
+@csrf_exempt
+def delete_order(request, order_id):
+    if request.method == 'POST':
+        order_collection.delete_one({'_id': ObjectId(order_id)})
+        return JsonResponse({'success': True})
+
 
