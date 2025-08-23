@@ -138,7 +138,7 @@ body.dark-mode .card .card-header { color: var(--view-h2-color); }
 .table-card .card-body { padding: 0; }
 .table { margin-bottom: 0; }
 .table thead th { background-color: var(--content-area-bg); color: var(--text-color); font-weight: 600; font-family: var(--font-secondary); border-bottom-width: 2px; border-color: var(--card-border) !important; padding: 0.85rem 1rem; white-space: nowrap; }
-.table tbody td { color: var(--text-color); vertical-align: middle; border-color: var(--card-border) !important; padding: 0.85rem 1rem; }
+.table tbody td { color: red; vertical-align: middle; border-color: var(--card-border) !important; padding: 0.85rem 1rem; }
 .table-hover tbody tr:hover { background-color: var(--body-bg); }
 body.dark-mode .table-hover tbody tr:hover { background-color: rgba(255,255,255,0.03); }
 
@@ -306,7 +306,7 @@ h1, h2, h3, h4, h5, h6, .modal-title { font-family: var(--font-secondary); }
 .table-card .card-body { padding: 0; }
 .table { margin-bottom: 0; }
 .table thead th { /* ... (styles as before) */ }
-.table tbody td { vertical-align: middle; /* ... (styles as before) */ }
+.table tbody td { vertical-align: middle; /* ... (styles as before) */; color: #50fa7b; }
 
 /* Button and Badge Styles */
 .btn-add-user, .btn-add-offer, .btn-add { /* ... (styles as before) */ }

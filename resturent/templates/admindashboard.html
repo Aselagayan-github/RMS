@@ -22,7 +22,9 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
 
     <!-- Chart.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -34,21 +36,32 @@
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse">
                 <div class="user-info">
-                    <img src="assets/img/find_user.png" class="user-image img-responsive" alt="Admin User" />
+                    <img src="{% static 'admind/assets/img/find_user.png' %}" class="user-image img-responsive"
+                        alt="Admin User" />
                     <h3>Admin Name</h3>
                     <p>admin@example.com</p>
                 </div>
                 <ul class="nav" id="main-menu">
-                    <li><a class="active-menu" href="#dashboard" data-view="dashboard"><i class="fa fa-dashboard fa-2x"></i> Dashboard</a></li>
-                    <li><a href="#order-processing" data-view="order-processing"><i class="fa fa-cogs fa-2x"></i> Order Processing</a></li>
-                    <li><a href="#table-bookings" data-view="table-bookings"><i class="fa fa-calendar-alt fa-2x"></i> Table Bookings</a></li>
-                    <li><a href="#menu-management" data-view="menu-management"><i class="fa fa-utensils fa-2x"></i> Menu Management</a></li>
-                    <li><a href="#delivery-management" data-view="delivery-management"><i class="fa fa-truck fa-2x"></i> Delivery Management</a></li>
-                    <li><a href="#invoice-management" data-view="invoice-management"><i class="fa fa-file-invoice-dollar fa-2x"></i> Invoice Management</a></li>
-                    <li><a href="#sales-reports" data-view="sales-reports"><i class="fa fa-chart-line fa-2x"></i> Sales Reports</a></li>
-                    <li><a href="#user-management" data-view="user-management"><i class="fa fa-users fa-2x"></i> User Management</a></li>
-                    <li><a href="#offers-discounts" data-view="offers-discounts"><i class="fa fa-tags fa-2x"></i> Offers & Discounts</a></li>
-                    <li><a href="#customer-feedback" data-view="customer-feedback"><i class="fa fa-comments fa-2x"></i> Customer Feedback</a></li>
+                    <li><a class="active-menu" href="#dashboard" data-view="dashboard"><i
+                                class="fa fa-dashboard fa-2x"></i> Dashboard</a></li>
+                    <li><a href="#order-processing" data-view="order-processing"><i class="fa fa-cogs fa-2x"></i> Order
+                            Processing</a></li>
+                    <li><a href="#table-bookings" data-view="table-bookings"><i class="fa fa-calendar-alt fa-2x"></i>
+                            Table Bookings</a></li>
+                    <li><a href="#menu-management" data-view="menu-management"><i class="fa fa-utensils fa-2x"></i> Menu
+                            Management</a></li>
+                    <li><a href="#delivery-management" data-view="delivery-management"><i class="fa fa-truck fa-2x"></i>
+                            Delivery Management</a></li>
+                    <li><a href="#invoice-management" data-view="invoice-management"><i
+                                class="fa fa-file-invoice-dollar fa-2x"></i> Invoice Management</a></li>
+                    <li><a href="#sales-reports" data-view="sales-reports"><i class="fa fa-chart-line fa-2x"></i> Sales
+                            Reports</a></li>
+                    <li><a href="#user-management" data-view="user-management"><i class="fa fa-users fa-2x"></i> User
+                            Management</a></li>
+                    <li><a href="#offers-discounts" data-view="offers-discounts"><i class="fa fa-tags fa-2x"></i> Offers
+                            & Discounts</a></li>
+                    <li><a href="#customer-feedback" data-view="customer-feedback"><i class="fa fa-comments fa-2x"></i>
+                            Customer Feedback</a></li>
                     <li><a href="#settings" data-view="settings"><i class="fa fa-cog fa-2x"></i> Settings</a></li>
                     <li><a href="#logout" data-view="logout"><i class="fa fa-sign-out-alt fa-2x"></i> Logout</a></li>
                 </ul>
@@ -70,22 +83,40 @@
                     <h2>Dashboard Overview</h2>
                     <p>Welcome to the Restaurant Admin Dashboard. Here you'll find key metrics and quick actions.</p>
                     <div class="stats-cards">
-                        <div class="card"><h4>Today's Orders</h4><p>25</p></div>
-                        <div class="card"><h4>Pending Bookings</h4><p>5</p></div>
-                        <div class="card"><h4>Total Revenue (Today)</h4><p>$1,250</p></div>
-                        <div class="card"><h4>New Customers</h4><p>8</p></div>
+                        <div class="card">
+                            <h4>Today's Orders</h4>
+                            <p>25</p>
+                        </div>
+                        <div class="card">
+                            <h4>Pending Bookings</h4>
+                            <p>5</p>
+                        </div>
+                        <div class="card">
+                            <h4>Total Revenue (Today)</h4>
+                            <p>$1,250</p>
+                        </div>
+                        <div class="card">
+                            <h4>New Customers</h4>
+                            <p>8</p>
+                        </div>
                     </div>
                     <div class="row mt-4 pt-3 additional-dashboard-widgets">
                         <div class="col-lg-6 mb-4">
                             <div class="card chart-container-wrapper">
                                 <div class="card-header">User Distribution</div>
-                                <div class="card-body"><div class="chart-container"><canvas id="userPieChart"></canvas></div></div>
+                                <div class="card-body">
+                                    <div class="chart-container"><canvas id="userPieChart"></canvas></div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-6 mb-4">
                             <div class="card weather-widget-wrapper">
                                 <div class="card-header">Current Weather</div>
-                                <div class="card-body"><div id="weatherWidget" class="weather-widget"><p class="weather-loading">Loading weather data...</p></div></div>
+                                <div class="card-body">
+                                    <div id="weatherWidget" class="weather-widget">
+                                        <p class="weather-loading">Loading weather data...</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -93,107 +124,892 @@
 
                 <!-- Order Processing View -->
                 <div id="order-processing-view" class="view">
-                    <h2>Order Processing</h2>
-                    <p>Manage incoming customer orders in real-time.</p>
-                    <div class="card table-card">
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead><tr><th>Order ID</th><th>Customer</th><th>Time</th><th>Status</th><th class="text-center">Actions</th></tr></thead>
-                                    <tbody id="order-processing-tbody">
-                                        <tr data-order-id="101"><td>#101</td><td>John Doe</td><td>12:05 PM</td><td><span class="badge status-preparing">Preparing</span></td><td class="text-center"><button class="btn btn-sm btn-info-custom me-1 view-order-details-btn"><i class="fas fa-eye"></i> View</button><button class="btn btn-sm btn-success-custom update-order-status-btn"><i class="fas fa-check-circle"></i> Mark Ready</button></td></tr>
-                                        <tr data-order-id="102"><td>#102</td><td>Jane Smith</td><td>11:58 AM</td><td><span class="badge status-pending">Pending</span></td><td class="text-center"><button class="btn btn-sm btn-info-custom me-1 view-order-details-btn"><i class="fas fa-eye"></i> View</button><button class="btn btn-sm btn-primary-custom update-order-status-btn"><i class="fas fa-play-circle"></i> Start Prep</button></td></tr>
-                                        <tr data-order-id="100"><td>#100</td><td>Peter Jones</td><td>11:45 AM</td><td><span class="badge status-completed">Completed</span></td><td class="text-center"><button class="btn btn-sm btn-info-custom me-1 view-order-details-btn"><i class="fas fa-eye"></i> View</button><button class="btn btn-sm btn-secondary" disabled><i class="fas fa-history"></i> Done</button></td></tr>
-                                    </tbody>
-                                </table>
+                    <div class="container-fluid py-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h2><i class="fas fa-utensils"></i> Order Management</h2>
+                                    <button type="button" class="btn btn-primary-custom" data-bs-toggle="modal"
+                                        data-bs-target="#orderModal" onclick="openNewOrderModal()">
+                                        <i class="fas fa-plus"></i> Create New Order
+                                    </button>
+                                </div>
+
+                                <!-- Orders Table -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="fas fa-list"></i> All Orders</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="ordersTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Order ID</th>
+                                                        <th>Customer Name</th>
+                                                        <th>Type</th>
+                                                        <th>Items</th>
+                                                        <th>Total</th>
+                                                        <th>Status</th>
+                                                        <th>Date</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="ordersTableBody">
+                                                    <!-- Orders will be loaded here -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New Order Modal -->
+                    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="orderModalLabel">Create New Order</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="orderForm">
+                                        <input type="hidden" id="orderId" name="orderId">
+
+                                        <!-- Customer Information -->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="orderCustomerName" class="form-label">Customer Name</label>
+                                                <input type="text" class="form-control" id="orderCustomerName"
+                                                    placeholder="Enter customer name" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="orderType" class="form-label">Order Type</label>
+                                                <select id="orderType" class="form-select" required>
+                                                    <option value="Dine-in">Dine-in</option>
+                                                    <option value="Takeaway">Takeaway</option>
+                                                    <option value="Delivery">Delivery</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <hr class="my-3">
+
+                                        <!-- Order Items Section -->
+                                        <h5 class="mb-3">Order Items</h5>
+                                        <div class="table-responsive mb-3">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 50%;">Item</th>
+                                                        <th style="width: 15%;">Qty</th>
+                                                        <th class="text-end" style="width: 20%;">Price</th>
+                                                        <th class="text-center" style="width: 15%;">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="orderItemsList">
+                                                    <!-- Dynamically added items will go here -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Add Item Form -->
+                                        <div class="row g-2 align-items-end p-3 bg-light rounded">
+                                            <div class="col-md-5">
+                                                <label for="selectMenuItem" class="form-label mb-1 small">Select
+                                                    Item</label>
+                                                <select id="selectMenuItem" class="form-select form-select-sm">
+                                                    <option selected disabled>Choose...</option>
+                                                    <option value="1" data-price="12.50" data-name="Classic Burger">
+                                                        Classic Burger</option>
+                                                    <option value="2" data-price="8.00" data-name="Caesar Salad">Caesar
+                                                        Salad</option>
+                                                    <option value="3" data-price="7.50" data-name="Tiramisu">Tiramisu
+                                                    </option>
+                                                    <option value="4" data-price="3.00" data-name="Soft Drink">Soft
+                                                        Drink</option>
+                                                    <option value="5" data-price="15.00" data-name="Grilled Chicken">
+                                                        Grilled Chicken</option>
+                                                    <option value="6" data-price="9.50" data-name="Pasta Alfredo">Pasta
+                                                        Alfredo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="itemQuantity" class="form-label mb-1 small">Quantity</label>
+                                                <input type="number" id="itemQuantity"
+                                                    class="form-control form-control-sm" value="1" min="1">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <button type="button" class="btn btn-sm btn-outline-primary w-100"
+                                                    id="addItemToOrderBtn">
+                                                    <i class="fas fa-plus"></i> Add Item
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <hr class="my-3">
+
+                                        <!-- Order Summary -->
+                                        <div class="row justify-content-end">
+                                            <div class="col-md-5">
+                                                <div class="order-summary">
+                                                    <div class="d-flex justify-content-between mb-2">
+                                                        <span>Subtotal:</span>
+                                                        <span id="orderSubtotal">$0.00</span>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between mb-2">
+                                                        <span>Tax (8.5%):</span>
+                                                        <span id="orderTax">$0.00</span>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="d-flex justify-content-between fw-bold h5">
+                                                        <span>Total:</span>
+                                                        <span id="orderTotal">$0.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary-custom" id="saveOrderBtn">
+                                        <i class="fas fa-save"></i> Create Order
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <script>
+                    // Order management variables
+                    let orderItems = [];
+                    let currentOrderId = null;
+
+                    // Initialize page
+                    document.addEventListener('DOMContentLoaded', function () {
+                        loadAllOrders();
+
+                        // Add event listeners
+                        document.getElementById('addItemToOrderBtn').addEventListener('click', addItemToOrder);
+                        document.getElementById('saveOrderBtn').addEventListener('click', saveOrder);
+                    });
+
+                    // Open new order modal
+                    function openNewOrderModal() {
+                        currentOrderId = null;
+                        document.getElementById('orderModalLabel').textContent = 'Create New Order';
+                        document.getElementById('orderForm').reset();
+                        orderItems = [];
+                        updateOrderSummary();
+                        clearOrderItemsList();
+                    }
+
+                    // Add item to order
+                    function addItemToOrder() {
+                        const selectElement = document.getElementById('selectMenuItem');
+                        const quantityElement = document.getElementById('itemQuantity');
+
+                        const selectedOption = selectElement.options[selectElement.selectedIndex];
+                        const itemId = selectedOption.value;
+                        const itemName = selectedOption.dataset.name;
+                        const itemPrice = parseFloat(selectedOption.dataset.price);
+                        const quantity = parseInt(quantityElement.value);
+
+                        if (!itemId || itemId === 'Choose...' || quantity <= 0) {
+                            alert('Please select an item and enter a valid quantity.');
+                            return;
+                        }
+
+                        // Check if item already exists in order
+                        const existingItemIndex = orderItems.findIndex(item => item.id === itemId);
+
+                        if (existingItemIndex >= 0) {
+                            // Update quantity of existing item
+                            orderItems[existingItemIndex].quantity += quantity;
+                        } else {
+                            // Add new item
+                            orderItems.push({
+                                id: itemId,
+                                name: itemName,
+                                price: itemPrice,
+                                quantity: quantity
+                            });
+                        }
+
+                        // Reset form elements
+                        selectElement.selectedIndex = 0;
+                        quantityElement.value = 1;
+
+                        // Update display
+                        updateOrderItemsList();
+                        updateOrderSummary();
+                    }
+
+                    // Update order items list display
+                    function updateOrderItemsList() {
+                        const tbody = document.getElementById('orderItemsList');
+                        tbody.innerHTML = '';
+
+                        orderItems.forEach((item, index) => {
+                            const row = document.createElement('tr');
+                            row.className = 'order-item-row';
+                            row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td class="text-end">$${(item.price * item.quantity).toFixed(2)}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeOrderItem(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                            tbody.appendChild(row);
+                        });
+                    }
+
+                    // Remove item from order
+                    function removeOrderItem(index) {
+                        orderItems.splice(index, 1);
+                        updateOrderItemsList();
+                        updateOrderSummary();
+                    }
+
+                    // Update order summary calculations
+                    function updateOrderSummary() {
+                        const subtotal = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                        const tax = subtotal * 0.085;
+                        const total = subtotal + tax;
+
+                        document.getElementById('orderSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+                        document.getElementById('orderTax').textContent = `$${tax.toFixed(2)}`;
+                        document.getElementById('orderTotal').textContent = `$${total.toFixed(2)}`;
+                    }
+
+                    // Clear order items list
+                    function clearOrderItemsList() {
+                        document.getElementById('orderItemsList').innerHTML = '';
+                    }
+
+                    // Save order (Create or Update)
+                    async function saveOrder() {
+                        const customerName = document.getElementById('orderCustomerName').value;
+                        const orderType = document.getElementById('orderType').value;
+
+                        if (!customerName.trim()) {
+                            alert('Please enter customer name.');
+                            return;
+                        }
+
+                        if (orderItems.length === 0) {
+                            alert('Please add at least one item to the order.');
+                            return;
+                        }
+
+                        const subtotal = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                        const tax = subtotal * 0.085;
+                        const total = subtotal + tax;
+
+                        const orderData = {
+                            customer_name: customerName,
+                            order_type: orderType,
+                            items: orderItems,
+                            subtotal: subtotal.toFixed(2),
+                            tax: tax.toFixed(2),
+                            total: total.toFixed(2),
+                            status: 'Pending'
+                        };
+
+                        try {
+                            let response;
+                            if (currentOrderId) {
+                                // Update existing order
+                                response = await fetch(`/api/orders/${currentOrderId}/`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRFToken': getCookie('csrftoken')
+                                    },
+                                    body: JSON.stringify(orderData)
+                                });
+                            } else {
+                                // Create new order
+                                response = await fetch('/api/orders/', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRFToken': getCookie('csrftoken')
+                                    },
+                                    body: JSON.stringify(orderData)
+                                });
+                            }
+
+                            if (response.ok) {
+                                const result = await response.json();
+                                alert(currentOrderId ? 'Order updated successfully!' : 'Order created successfully!');
+
+                                // Close modal and refresh orders
+                                const modal = bootstrap.Modal.getInstance(document.getElementById('orderModal'));
+                                modal.hide();
+                                loadAllOrders();
+                            } else {
+                                const error = await response.json();
+                                alert('Error saving order: ' + (error.message || 'Unknown error'));
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert('Error saving order. Please try again.');
+                        }
+                    }
+
+                    // Load all orders
+                    async function loadAllOrders() {
+                        try {
+                            const response = await fetch('/api/orders/');
+                            if (response.ok) {
+                                const orders = await response.json();
+                                displayOrders(orders);
+                            } else {
+                                console.error('Error loading orders');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                        }
+                    }
+
+                    // Display orders in table
+                    function displayOrders(orders) {
+                        const tbody = document.getElementById('ordersTableBody');
+                        tbody.innerHTML = '';
+
+                        orders.forEach(order => {
+                            const row = document.createElement('tr');
+
+                            // Format items for display
+                            const itemsDisplay = order.items.map(item => `${item.name} (${item.quantity})`).join(', ');
+
+                            // Status badge color
+                            const statusClass = getStatusBadgeClass(order.status);
+
+                            row.innerHTML = `
+                    <td>#${order._id ? order._id.slice(-6) : 'N/A'}</td>
+                    <td>${order.customer_name}</td>
+                    <td>${order.order_type}</td>
+                    <td title="${itemsDisplay}">${itemsDisplay.length > 30 ? itemsDisplay.substring(0, 30) + '...' : itemsDisplay}</td>
+                    <td>$${order.total}</td>
+                    <td><span class="badge ${statusClass} status-badge">${order.status}</span></td>
+                    <td>${order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-sm btn-outline-primary" onclick="editOrder('${order._id}')" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-success" onclick="updateOrderStatus('${order._id}', 'Completed')" title="Mark Complete">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteOrder('${order._id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                            tbody.appendChild(row);
+                        });
+                    }
+
+                    // Get status badge class
+                    function getStatusBadgeClass(status) {
+                        switch (status) {
+                            case 'Pending': return 'bg-warning text-dark';
+                            case 'Preparing': return 'bg-info';
+                            case 'Ready': return 'bg-primary';
+                            case 'Completed': return 'bg-success';
+                            case 'Cancelled': return 'bg-danger';
+                            default: return 'bg-secondary';
+                        }
+                    }
+
+                    // Edit order
+                    async function editOrder(orderId) {
+                        try {
+                            const response = await fetch(`/api/orders/${orderId}/`);
+                            if (response.ok) {
+                                const order = await response.json();
+
+                                // Populate form with order data
+                                currentOrderId = orderId;
+                                document.getElementById('orderModalLabel').textContent = 'Edit Order';
+                                document.getElementById('orderCustomerName').value = order.customer_name;
+                                document.getElementById('orderType').value = order.order_type;
+
+                                // Set order items
+                                orderItems = order.items || [];
+                                updateOrderItemsList();
+                                updateOrderSummary();
+
+                                // Show modal
+                                const modal = new bootstrap.Modal(document.getElementById('orderModal'));
+                                modal.show();
+                            } else {
+                                alert('Error loading order details');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert('Error loading order details');
+                        }
+                    }
+
+                    // Update order status
+                    async function updateOrderStatus(orderId, newStatus) {
+                        try {
+                            const response = await fetch(`/api/orders/${orderId}/`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken')
+                                },
+                                body: JSON.stringify({ status: newStatus })
+                            });
+
+                            if (response.ok) {
+                                loadAllOrders();
+                            } else {
+                                alert('Error updating order status');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert('Error updating order status');
+                        }
+                    }
+
+                    // Delete order
+                    async function deleteOrder(orderId) {
+                        if (confirm('Are you sure you want to delete this order?')) {
+                            try {
+                                const response = await fetch(`/api/orders/${orderId}/`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRFToken': getCookie('csrftoken')
+                                    }
+                                });
+
+                                if (response.ok) {
+                                    alert('Order deleted successfully');
+                                    loadAllOrders();
+                                } else {
+                                    alert('Error deleting order');
+                                }
+                            } catch (error) {
+                                console.error('Error:', error);
+                                alert('Error deleting order');
+                            }
+                        }
+                    }
+
+                    // Get CSRF token
+                    function getCookie(name) {
+                        let cookieValue = null;
+                        if (document.cookie && document.cookie !== '') {
+                            const cookies = document.cookie.split(';');
+                            for (let i = 0; i < cookies.length; i++) {
+                                const cookie = cookies[i].trim();
+                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                                }
+                            }
+                        }
+                        return cookieValue;
+                    }
+                </script>
                 <!-- Table Bookings View -->
                 <div id="table-bookings-view" class="view">
                     <div class="view-header d-flex justify-content-between align-items-center mb-4">
                         <h2>Table Bookings</h2>
-                        <button type="button" class="btn btn-success btn-add" id="addNewBookingBtn"><i class="fas fa-plus-circle me-2"></i>Add New Booking</button>
+                        <button type="button" class="btn btn-success btn-add" id="addNewBookingBtn"><i
+                                class="fas fa-plus-circle me-2"></i>Add New Booking</button>
                     </div>
                     <div class="card table-card">
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0">
-                                    <thead><tr><th>Booking ID</th><th>Customer</th><th>Date & Time</th><th>Guests</th><th>Status</th><th class="text-center">Actions</th></tr></thead>
+                                    <thead>
+                                        <tr>
+                                            <th>Booking ID</th>
+                                            <th>Customer</th>
+                                            <th>Date & Time</th>
+                                            <th>Guests</th>
+                                            <th>Status</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
                                     <tbody id="bookings-tbody">
-                                        <tr><td>BK-001</td><td>Alice Johnson</td><td>2024-08-15, 19:30</td><td>4</td><td><span class="badge status-confirmed">Confirmed</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-booking-btn"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-booking-btn"><i class="fas fa-trash-alt"></i></button></td></tr>
-                                        <tr><td>BK-002</td><td>Bob Williams</td><td>2024-08-16, 20:00</td><td>2</td><td><span class="badge status-pending">Pending</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-booking-btn"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-booking-btn"><i class="fas fa-trash-alt"></i></button></td></tr>
+                                        <tr>
+                                            <td>BK-001</td>
+                                            <td>Alice Johnson</td>
+                                            <td>2024-08-15, 19:30</td>
+                                            <td>4</td>
+                                            <td><span class="badge status-confirmed">Confirmed</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-booking-btn"><i
+                                                        class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-booking-btn"><i
+                                                        class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>BK-002</td>
+                                            <td>Bob Williams</td>
+                                            <td>2024-08-16, 20:00</td>
+                                            <td>2</td>
+                                            <td><span class="badge status-pending">Pending</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-booking-btn"><i
+                                                        class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-booking-btn"><i
+                                                        class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="bookingModalLabel">Booking Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="bookingForm"><input type="hidden" id="bookingId" name="bookingId"><div class="row"><div class="col-md-6 mb-3"><label for="bookingCustomerName" class="form-label">Customer Name</label><input type="text" class="form-control" id="bookingCustomerName" required></div><div class="col-md-6 mb-3"><label for="bookingCustomerPhone" class="form-label">Phone</label><input type="tel" class="form-control" id="bookingCustomerPhone" required></div></div><div class="row"><div class="col-md-6 mb-3"><label for="bookingDate" class="form-label">Date</label><input type="date" class="form-control" id="bookingDate" required></div><div class="col-md-6 mb-3"><label for="bookingTime" class="form-label">Time</label><input type="time" class="form-control" id="bookingTime" required></div></div><div class="row"><div class="col-md-6 mb-3"><label for="bookingGuests" class="form-label">Number of Guests</label><input type="number" class="form-control" id="bookingGuests" required min="1"></div><div class="col-md-6 mb-3"><label for="bookingStatus" class="form-label">Status</label><select id="bookingStatus" class="form-select"><option value="Confirmed">Confirmed</option><option value="Pending">Pending</option><option value="Cancelled">Cancelled</option></select></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button><button type="submit" form="bookingForm" class="btn btn-primary-custom" id="saveBookingBtn">Save Changes</button></div></div></div></div>
+                    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="bookingModalLabel">Booking Details</h5><button
+                                        type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="bookingForm"><input type="hidden" id="bookingId" name="bookingId">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="bookingCustomerName"
+                                                    class="form-label">Customer Name</label><input type="text"
+                                                    class="form-control" id="bookingCustomerName" required></div>
+                                            <div class="col-md-6 mb-3"><label for="bookingCustomerPhone"
+                                                    class="form-label">Phone</label><input type="tel"
+                                                    class="form-control" id="bookingCustomerPhone" required></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="bookingDate"
+                                                    class="form-label">Date</label><input type="date"
+                                                    class="form-control" id="bookingDate" required></div>
+                                            <div class="col-md-6 mb-3"><label for="bookingTime"
+                                                    class="form-label">Time</label><input type="time"
+                                                    class="form-control" id="bookingTime" required></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="bookingGuests"
+                                                    class="form-label">Number of Guests</label><input type="number"
+                                                    class="form-control" id="bookingGuests" required min="1"></div>
+                                            <div class="col-md-6 mb-3"><label for="bookingStatus"
+                                                    class="form-label">Status</label><select id="bookingStatus"
+                                                    class="form-select">
+                                                    <option value="Confirmed">Confirmed</option>
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="Cancelled">Cancelled</option>
+                                                </select></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer"><button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button><button type="submit" form="bookingForm"
+                                        class="btn btn-primary-custom" id="saveBookingBtn">Save Changes</button></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Menu Management View -->
                 <div id="menu-management-view" class="view">
                     <div class="view-header d-flex justify-content-between align-items-center mb-4">
                         <h2>Menu Management</h2>
-                        <button type="button" class="btn btn-success btn-add" id="addNewMenuItemBtn"><i class="fas fa-plus-circle me-2"></i>Add Menu Item</button>
+                        <button type="button" class="btn btn-success btn-add" id="addNewMenuItemBtn"><i
+                                class="fas fa-plus-circle me-2"></i>Add Menu Item</button>
                     </div>
                     <div class="card table-card">
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0">
-                                    <thead><tr><th>Image</th><th>Item Name</th><th>Category</th><th>Price</th><th>Availability</th><th class="text-center">Actions</th></tr></thead>
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Item Name</th>
+                                            <th>Category</th>
+                                            <th>Price</th>
+                                            <th>Availability</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
                                     <tbody id="menu-items-tbody">
-                                        <tr><td><img src="https://placehold.co/60x60/1abc9c/white?text=B" class="menu-item-image" alt="Burger"></td><td>Classic Burger</td><td>Main Course</td><td>$12.50</td><td><span class="badge bg-success-custom">Available</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-menu-item-btn"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-menu-item-btn"><i class="fas fa-trash-alt"></i></button></td></tr>
-                                        <tr><td><img src="https://placehold.co/60x60/3498db/white?text=S" class="menu-item-image" alt="Salad"></td><td>Caesar Salad</td><td>Appetizers</td><td>$8.00</td><td><span class="badge bg-success-custom">Available</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-menu-item-btn"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-menu-item-btn"><i class="fas fa-trash-alt"></i></button></td></tr>
-                                        <tr><td><img src="https://placehold.co/60x60/e74c3c/white?text=T" class="menu-item-image" alt="Tiramisu"></td><td>Tiramisu</td><td>Desserts</td><td>$7.50</td><td><span class="badge bg-secondary-custom">Unavailable</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-menu-item-btn"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-menu-item-btn"><i class="fas fa-trash-alt"></i></button></td></tr>
+                                        <tr>
+                                            <td><img src="https://placehold.co/60x60/1abc9c/white?text=B"
+                                                    class="menu-item-image" alt="Burger"></td>
+                                            <td>Classic Burger</td>
+                                            <td>Main Course</td>
+                                            <td>$12.50</td>
+                                            <td><span class="badge bg-success-custom">Available</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-menu-item-btn"><i
+                                                        class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-menu-item-btn"><i
+                                                        class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="https://placehold.co/60x60/3498db/white?text=S"
+                                                    class="menu-item-image" alt="Salad"></td>
+                                            <td>Caesar Salad</td>
+                                            <td>Appetizers</td>
+                                            <td>$8.00</td>
+                                            <td><span class="badge bg-success-custom">Available</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-menu-item-btn"><i
+                                                        class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-menu-item-btn"><i
+                                                        class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="https://placehold.co/60x60/e74c3c/white?text=T"
+                                                    class="menu-item-image" alt="Tiramisu"></td>
+                                            <td>Tiramisu</td>
+                                            <td>Desserts</td>
+                                            <td>$7.50</td>
+                                            <td><span class="badge bg-secondary-custom">Unavailable</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-menu-item-btn"><i
+                                                        class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-menu-item-btn"><i
+                                                        class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="menuItemModal" tabindex="-1" aria-labelledby="menuItemModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="menuItemModalLabel">Menu Item Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="menuItemForm"><input type="hidden" id="menuItemId"><div class="row"><div class="col-md-8"><div class="row"><div class="col-md-7 mb-3"><label for="menuItemName" class="form-label">Item Name</label><input type="text" class="form-control" id="menuItemName" required></div><div class="col-md-5 mb-3"><label for="menuItemPrice" class="form-label">Price</label><input type="number" step="0.01" min="0" class="form-control" id="menuItemPrice" required></div></div><div class="row"><div class="col-md-7 mb-3"><label for="menuItemCategory" class="form-label">Category</label><select id="menuItemCategory" class="form-select" required><option>Main Course</option><option>Appetizers</option><option>Desserts</option><option>Beverages</option></select></div><div class="col-md-5 mb-3"><label for="menuItemAvailability" class="form-label">Availability</label><select id="menuItemAvailability" class="form-select"><option value="Available">Available</option><option value="Unavailable">Unavailable</option></select></div></div></div><div class="col-md-4 mb-3"><label for="menuItemImage" class="form-label">Image</label><input class="form-control" type="file" id="menuItemImage" accept="image/*"><div class="mt-2"><img id="menuItemImagePreview" src="https://placehold.co/200x200/cccccc/969696?text=Image" alt="Image Preview" class="img-fluid rounded"></div></div></div><div class="mb-3"><label for="menuItemDescription" class="form-label">Description</label><textarea class="form-control" id="menuItemDescription" rows="3"></textarea></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button><button type="submit" form="menuItemForm" class="btn btn-primary-custom" id="saveMenuItemBtn">Save Changes</button></div></div></div></div>
+                    <div class="modal fade" id="menuItemModal" tabindex="-1" aria-labelledby="menuItemModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="menuItemModalLabel">Menu Item Details</h5><button
+                                        type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="menuItemForm"><input type="hidden" id="menuItemId">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="row">
+                                                    <div class="col-md-7 mb-3"><label for="menuItemName"
+                                                            class="form-label">Item Name</label><input type="text"
+                                                            class="form-control" id="menuItemName" required></div>
+                                                    <div class="col-md-5 mb-3"><label for="menuItemPrice"
+                                                            class="form-label">Price</label><input type="number"
+                                                            step="0.01" min="0" class="form-control" id="menuItemPrice"
+                                                            required></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-7 mb-3"><label for="menuItemCategory"
+                                                            class="form-label">Category</label><select
+                                                            id="menuItemCategory" class="form-select" required>
+                                                            <option>Main Course</option>
+                                                            <option>Appetizers</option>
+                                                            <option>Desserts</option>
+                                                            <option>Beverages</option>
+                                                        </select></div>
+                                                    <div class="col-md-5 mb-3"><label for="menuItemAvailability"
+                                                            class="form-label">Availability</label><select
+                                                            id="menuItemAvailability" class="form-select">
+                                                            <option value="Available">Available</option>
+                                                            <option value="Unavailable">Unavailable</option>
+                                                        </select></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-3"><label for="menuItemImage"
+                                                    class="form-label">Image</label><input class="form-control"
+                                                    type="file" id="menuItemImage" accept="image/*">
+                                                <div class="mt-2"><img id="menuItemImagePreview"
+                                                        src="https://placehold.co/200x200/cccccc/969696?text=Image"
+                                                        alt="Image Preview" class="img-fluid rounded"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3"><label for="menuItemDescription"
+                                                class="form-label">Description</label><textarea class="form-control"
+                                                id="menuItemDescription" rows="3"></textarea></div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer"><button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button><button type="submit" form="menuItemForm"
+                                        class="btn btn-primary-custom" id="saveMenuItemBtn">Save Changes</button></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Delivery Management View -->
                 <div id="delivery-management-view" class="view">
                     <div class="view-header d-flex justify-content-between align-items-center mb-4">
                         <h2>Delivery Management</h2>
-                        <button type="button" class="btn btn-success btn-add" id="addNewDeliveryBtn"><i class="fas fa-plus-circle me-2"></i>Add New Delivery</button>
+                        <button type="button" class="btn btn-success btn-add" id="addNewDeliveryBtn"><i
+                                class="fas fa-plus-circle me-2"></i>Add New Delivery</button>
                     </div>
                     <div class="card table-card">
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0">
-                                    <thead><tr><th>Order ID</th><th>Customer</th><th>Address</th><th>Driver</th><th>Status</th><th class="text-center">Actions</th></tr></thead>
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Address</th>
+                                            <th>Driver</th>
+                                            <th>Status</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
                                     <tbody id="delivery-tbody">
-                                        <tr data-delivery-id="D-55"><td>#101</td><td>John Doe</td><td>123 Main St...</td><td>Mike</td><td><span class="badge status-out-for-delivery">Out for Delivery</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-delivery-btn"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-delivery-btn"><i class="fas fa-trash-alt"></i></button></td></tr>
-                                        <tr data-delivery-id="D-56"><td>#103</td><td>Alice</td><td>456 Oak Ave...</td><td>Unassigned</td><td><span class="badge status-ready-for-pickup">Ready for Pickup</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-delivery-btn"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-delivery-btn"><i class="fas fa-trash-alt"></i></button></td></tr>
-                                        <tr data-delivery-id="D-54"><td>#99</td><td>Bob</td><td>789 Pine Ln...</td><td>Sarah</td><td><span class="badge status-delivered">Delivered</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-delivery-btn"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-delivery-btn"><i class="fas fa-trash-alt"></i></button></td></tr>
+                                        <tr data-delivery-id="D-55">
+                                            <td>#101</td>
+                                            <td>John Doe</td>
+                                            <td>123 Main St...</td>
+                                            <td>Mike</td>
+                                            <td><span class="badge status-out-for-delivery">Out for Delivery</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-delivery-btn"><i
+                                                        class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-delivery-btn"><i
+                                                        class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
+                                        <tr data-delivery-id="D-56">
+                                            <td>#103</td>
+                                            <td>Alice</td>
+                                            <td>456 Oak Ave...</td>
+                                            <td>Unassigned</td>
+                                            <td><span class="badge status-ready-for-pickup">Ready for Pickup</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-delivery-btn"><i
+                                                        class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-delivery-btn"><i
+                                                        class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
+                                        <tr data-delivery-id="D-54">
+                                            <td>#99</td>
+                                            <td>Bob</td>
+                                            <td>789 Pine Ln...</td>
+                                            <td>Sarah</td>
+                                            <td><span class="badge status-delivered">Delivered</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-delivery-btn"><i
+                                                        class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-delivery-btn"><i
+                                                        class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                     <!-- Delivery Modal -->
-                    <div class="modal fade" id="deliveryModal" tabindex="-1" aria-labelledby="deliveryModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="deliveryModalLabel">Delivery Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="deliveryForm"><input type="hidden" id="deliveryId" name="deliveryId"><div class="row"><div class="col-md-6 mb-3"><label for="deliveryOrderId" class="form-label">Order ID</label><input type="text" class="form-control" id="deliveryOrderId" required></div><div class="col-md-6 mb-3"><label for="deliveryCustomerName" class="form-label">Customer Name</label><input type="text" class="form-control" id="deliveryCustomerName" required></div></div><div class="mb-3"><label for="deliveryAddress" class="form-label">Address</label><input type="text" class="form-control" id="deliveryAddress" required></div><div class="row"><div class="col-md-6 mb-3"><label for="deliveryDriver" class="form-label">Driver</label><input type="text" class="form-control" id="deliveryDriver" placeholder="e.g., Mike, Sarah, or Unassigned"></div><div class="col-md-6 mb-3"><label for="deliveryStatus" class="form-label">Status</label><select id="deliveryStatus" class="form-select" required><option value="Ready for Pickup">Ready for Pickup</option><option value="Out for Delivery">Out for Delivery</option><option value="Delivered">Delivered</option><option value="Cancelled">Cancelled</option></select></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button><button type="submit" form="deliveryForm" class="btn btn-primary-custom" id="saveDeliveryBtn">Save Changes</button></div></div></div></div>
+                    <div class="modal fade" id="deliveryModal" tabindex="-1" aria-labelledby="deliveryModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deliveryModalLabel">Delivery Details</h5><button
+                                        type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="deliveryForm"><input type="hidden" id="deliveryId" name="deliveryId">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="deliveryOrderId"
+                                                    class="form-label">Order ID</label><input type="text"
+                                                    class="form-control" id="deliveryOrderId" required></div>
+                                            <div class="col-md-6 mb-3"><label for="deliveryCustomerName"
+                                                    class="form-label">Customer Name</label><input type="text"
+                                                    class="form-control" id="deliveryCustomerName" required></div>
+                                        </div>
+                                        <div class="mb-3"><label for="deliveryAddress"
+                                                class="form-label">Address</label><input type="text"
+                                                class="form-control" id="deliveryAddress" required></div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="deliveryDriver"
+                                                    class="form-label">Driver</label><input type="text"
+                                                    class="form-control" id="deliveryDriver"
+                                                    placeholder="e.g., Mike, Sarah, or Unassigned"></div>
+                                            <div class="col-md-6 mb-3"><label for="deliveryStatus"
+                                                    class="form-label">Status</label><select id="deliveryStatus"
+                                                    class="form-select" required>
+                                                    <option value="Ready for Pickup">Ready for Pickup</option>
+                                                    <option value="Out for Delivery">Out for Delivery</option>
+                                                    <option value="Delivered">Delivered</option>
+                                                    <option value="Cancelled">Cancelled</option>
+                                                </select></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer"><button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button><button type="submit" form="deliveryForm"
+                                        class="btn btn-primary-custom" id="saveDeliveryBtn">Save Changes</button></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Invoice Management View -->
                 <div id="invoice-management-view" class="view">
                     <div class="view-header d-flex justify-content-between align-items-center mb-4">
                         <h2>Invoice Management</h2>
-                        <button type="button" class="btn btn-success btn-add" id="generateInvoiceBtn"><i class="fas fa-plus-circle me-2"></i>Generate Invoice</button>
+                        <button type="button" class="btn btn-success btn-add" id="generateInvoiceBtn"><i
+                                class="fas fa-plus-circle me-2"></i>Generate Invoice</button>
                     </div>
                     <div class="card table-card">
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0">
-                                    <thead><tr><th>Invoice #</th><th>Customer</th><th>Date</th><th>Amount</th><th>Status</th><th class="text-center">Actions</th></tr></thead>
+                                    <thead>
+                                        <tr>
+                                            <th>Invoice #</th>
+                                            <th>Customer</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
                                     <tbody id="invoices-tbody">
-                                        <tr><td>INV-2024-001</td><td>John Doe</td><td>2024-08-10</td><td>$45.50</td><td><span class="badge status-paid">Paid</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-info-custom"><i class="fas fa-eye"></i></button> <button class="btn btn-icon btn-sm btn-secondary-custom"><i class="fas fa-print"></i></button></td></tr>
-                                        <tr><td>INV-2024-002</td><td>Jane Smith</td><td>2024-08-11</td><td>$82.00</td><td><span class="badge status-unpaid">Unpaid</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-info-custom"><i class="fas fa-eye"></i></button> <button class="btn btn-icon btn-sm btn-secondary-custom"><i class="fas fa-print"></i></button></td></tr>
+                                        <tr>
+                                            <td>INV-2024-001</td>
+                                            <td>John Doe</td>
+                                            <td>2024-08-10</td>
+                                            <td>$45.50</td>
+                                            <td><span class="badge status-paid">Paid</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-info-custom"><i
+                                                        class="fas fa-eye"></i></button> <button
+                                                    class="btn btn-icon btn-sm btn-secondary-custom"><i
+                                                        class="fas fa-print"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>INV-2024-002</td>
+                                            <td>Jane Smith</td>
+                                            <td>2024-08-11</td>
+                                            <td>$82.00</td>
+                                            <td><span class="badge status-unpaid">Unpaid</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-info-custom"><i
+                                                        class="fas fa-eye"></i></button> <button
+                                                    class="btn btn-icon btn-sm btn-secondary-custom"><i
+                                                        class="fas fa-print"></i></button></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -217,7 +1033,9 @@
                                     <input type="date" id="report-end-date" class="form-control">
                                 </div>
                                 <div class="col-md-4">
-                                    <button type="button" id="generate-report-btn" class="btn btn-primary-custom w-100"><i class="fas fa-sync-alt me-2"></i>Generate Report</button>
+                                    <button type="button" id="generate-report-btn"
+                                        class="btn btn-primary-custom w-100"><i
+                                            class="fas fa-sync-alt me-2"></i>Generate Report</button>
                                 </div>
                             </form>
                         </div>
@@ -227,7 +1045,8 @@
                             <div class="card chart-container-wrapper">
                                 <div class="card-header">Sales Over Time</div>
                                 <div class="card-body">
-                                    <div class="chart-container" style="min-height: 350px; max-width: 100%"><canvas id="salesBarChart"></canvas></div>
+                                    <div class="chart-container" style="min-height: 350px; max-width: 100%"><canvas
+                                            id="salesBarChart"></canvas></div>
                                 </div>
                             </div>
                         </div>
@@ -238,22 +1057,112 @@
                 <div id="user-management-view" class="view">
                     <div class="view-header d-flex justify-content-between align-items-center mb-4">
                         <h2>User Management</h2>
-                        <button type="button" class="btn btn-success btn-add-user" id="addNewUserBtn"><i class="fas fa-plus-circle me-2"></i>Add New User</button>
+                        <button type="button" class="btn btn-success btn-add-user" id="addNewUserBtn"><i
+                                class="fas fa-plus-circle me-2"></i>Add New User</button>
                     </div>
                     <div class="card table-card">
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle user-table mb-0">
-                                    <thead><tr><th>ID</th><th>Name</th><th>Address</th><th>Phone</th><th>Email</th><th>Role</th><th class="text-center">Actions</th></tr></thead>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
                                     <tbody id="users-tbody">
-                                        <tr><td>1</td><td>John Doe</td><td>123 Main St, Anytown, USA</td><td>(555) 123-4567</td><td>john.doe@example.com</td><td><span class="badge bg-primary-custom">Admin</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 update-user-btn" title="Edit User"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-user-btn" title="Delete User"><i class="fas fa-trash-alt"></i></button></td></tr>
-                                        <tr><td>2</td><td>Jane Smith</td><td>456 Oak Ave, Otherville, USA</td><td>(555) 987-6543</td><td>jane.smith@example.com</td><td><span class="badge bg-secondary-custom">Customer</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 update-user-btn" title="Edit User"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-user-btn" title="Delete User"><i class="fas fa-trash-alt"></i></button></td></tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>John Doe</td>
+                                            <td>123 Main St, Anytown, USA</td>
+                                            <td>(555) 123-4567</td>
+                                            <td>john.doe@example.com</td>
+                                            <td><span class="badge bg-primary-custom">Admin</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 update-user-btn"
+                                                    title="Edit User"><i class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-user-btn"
+                                                    title="Delete User"><i class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Jane Smith</td>
+                                            <td>456 Oak Ave, Otherville, USA</td>
+                                            <td>(555) 987-6543</td>
+                                            <td>jane.smith@example.com</td>
+                                            <td><span class="badge bg-secondary-custom">Customer</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 update-user-btn"
+                                                    title="Edit User"><i class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-user-btn"
+                                                    title="Delete User"><i class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="userModalLabel"><i class="fas fa-user-plus me-2"></i>User Information</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="userForm"><input type="hidden" id="userId" name="userId"><div class="row"><div class="col-md-6 mb-3"><label for="userIdDisplay" class="form-label">ID Number</label><input type="text" class="form-control" id="userIdDisplay" name="idDisplay" readonly></div><div class="col-md-6 mb-3"><label for="userName" class="form-label">Full Name</label><input type="text" class="form-control" id="userName" name="name" placeholder="Enter full name" required></div></div><div class="mb-3"><label for="userAddress" class="form-label">Address</label><input type="text" class="form-control" id="userAddress" name="Address" placeholder="Enter address" required></div><div class="row"><div class="col-md-6 mb-3"><label for="userContactNo" class="form-label">Contact Number</label><input type="tel" class="form-control" id="userContactNo" name="Contactno" placeholder="Enter contact number" required></div><div class="col-md-6 mb-3"><label for="userEmail" class="form-label">Email</label><input type="email" class="form-control" id="userEmail" name="gmail" placeholder="Enter email address" required></div></div><div class="row"><div class="col-md-6 mb-3"><label for="userRole" class="form-label">User Role</label><select name="userRole" id="userRole" class="form-select" required><option value="">Select Role...</option><option value="Admin">Admin</option><option value="Customer">Customer</option><option value="Staff">Staff</option></select></div><div class="col-md-6 mb-3"><label for="userPassword" class="form-label">Password</label><input type="password" class="form-control" id="userPassword" name="password" placeholder="Required for new user"></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button type="submit" form="userForm" class="btn btn-primary-custom" id="saveUserBtn"><i class="fas fa-save me-2"></i>Save User</button></div></div></div></div>
+                    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="userModalLabel"><i
+                                            class="fas fa-user-plus me-2"></i>User Information</h5><button type="button"
+                                        class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="userForm"><input type="hidden" id="userId" name="userId">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="userIdDisplay" class="form-label">ID
+                                                    Number</label><input type="text" class="form-control"
+                                                    id="userIdDisplay" name="idDisplay" readonly></div>
+                                            <div class="col-md-6 mb-3"><label for="userName" class="form-label">Full
+                                                    Name</label><input type="text" class="form-control" id="userName"
+                                                    name="name" placeholder="Enter full name" required></div>
+                                        </div>
+                                        <div class="mb-3"><label for="userAddress"
+                                                class="form-label">Address</label><input type="text"
+                                                class="form-control" id="userAddress" name="Address"
+                                                placeholder="Enter address" required></div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="userContactNo"
+                                                    class="form-label">Contact Number</label><input type="tel"
+                                                    class="form-control" id="userContactNo" name="Contactno"
+                                                    placeholder="Enter contact number" required></div>
+                                            <div class="col-md-6 mb-3"><label for="userEmail"
+                                                    class="form-label">Email</label><input type="email"
+                                                    class="form-control" id="userEmail" name="gmail"
+                                                    placeholder="Enter email address" required></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="userRole" class="form-label">User
+                                                    Role</label><select name="userRole" id="userRole"
+                                                    class="form-select" required>
+                                                    <option value="">Select Role...</option>
+                                                    <option value="Admin">Admin</option>
+                                                    <option value="Customer">Customer</option>
+                                                    <option value="Staff">Staff</option>
+                                                </select></div>
+                                            <div class="col-md-6 mb-3"><label for="userPassword"
+                                                    class="form-label">Password</label><input type="password"
+                                                    class="form-control" id="userPassword" name="password"
+                                                    placeholder="Required for new user"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer"><button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel</button><button type="submit" form="userForm"
+                                        class="btn btn-primary-custom" id="saveUserBtn"><i
+                                            class="fas fa-save me-2"></i>Save User</button></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Offers & Discounts View -->
@@ -264,17 +1173,60 @@
                             <i class="fas fa-plus-circle me-2"></i>Add New Offer
                         </button>
                     </div>
-                    <p class="mb-4">Manage your promotional offers, sales, and discount codes to attract and retain customers.</p>
+                    <p class="mb-4">Manage your promotional offers, sales, and discount codes to attract and retain
+                        customers.</p>
                     <div class="card table-card offers-table-card">
                         <div class="card-header">Current Offers</div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle offers-table mb-0">
-                                    <thead><tr><th>Offer Name</th><th>Discount</th><th>Start Date</th><th>End Date</th><th>Status</th><th class="text-center">Actions</th></tr></thead>
+                                    <thead>
+                                        <tr>
+                                            <th>Offer Name</th>
+                                            <th>Discount</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Status</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
                                     <tbody id="offers-tbody">
-                                        <tr data-offer-id="1"><td>Summer Fiesta Sale</td><td>15%</td><td>2024-06-01</td><td>2024-06-30</td><td><span class="badge bg-success-custom">Active</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-offer-btn" title="Edit Offer"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-offer-btn" title="Delete Offer"><i class="fas fa-trash-alt"></i></button></td></tr>
-                                        <tr data-offer-id="2"><td>Weekend Bonanza</td><td>$5 Off</td><td>2024-05-25</td><td>2024-05-26</td><td><span class="badge bg-secondary-custom">Expired</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-offer-btn" title="Edit Offer"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-offer-btn" title="Delete Offer"><i class="fas fa-trash-alt"></i></button></td></tr>
-                                        <tr data-offer-id="3"><td>First Timer's Treat</td><td>10%</td><td>2024-07-01</td><td>2024-12-31</td><td><span class="badge status-upcoming">Upcoming</span></td><td class="text-center"><button class="btn btn-icon btn-sm btn-primary-custom me-1 edit-offer-btn" title="Edit Offer"><i class="fas fa-edit"></i></button><button class="btn btn-icon btn-sm btn-danger-custom delete-offer-btn" title="Delete Offer"><i class="fas fa-trash-alt"></i></button></td></tr>
+                                        <tr data-offer-id="1">
+                                            <td>Summer Fiesta Sale</td>
+                                            <td>15%</td>
+                                            <td>2024-06-01</td>
+                                            <td>2024-06-30</td>
+                                            <td><span class="badge bg-success-custom">Active</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-offer-btn"
+                                                    title="Edit Offer"><i class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-offer-btn"
+                                                    title="Delete Offer"><i class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
+                                        <tr data-offer-id="2">
+                                            <td>Weekend Bonanza</td>
+                                            <td>$5 Off</td>
+                                            <td>2024-05-25</td>
+                                            <td>2024-05-26</td>
+                                            <td><span class="badge bg-secondary-custom">Expired</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-offer-btn"
+                                                    title="Edit Offer"><i class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-offer-btn"
+                                                    title="Delete Offer"><i class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
+                                        <tr data-offer-id="3">
+                                            <td>First Timer's Treat</td>
+                                            <td>10%</td>
+                                            <td>2024-07-01</td>
+                                            <td>2024-12-31</td>
+                                            <td><span class="badge status-upcoming">Upcoming</span></td>
+                                            <td class="text-center"><button
+                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-offer-btn"
+                                                    title="Edit Offer"><i class="fas fa-edit"></i></button><button
+                                                    class="btn btn-icon btn-sm btn-danger-custom delete-offer-btn"
+                                                    title="Delete Offer"><i class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -282,42 +1234,179 @@
                     </div>
 
                     <div id="add-offer-form-container" class="mt-4 card form-card" style="display: none;">
-                        <div class="card-header"><h3><i class="fas fa-tag me-2"></i>Add New Offer/Discount</h3></div>
+                        <div class="card-header">
+                            <h3><i class="fas fa-tag me-2"></i>Add New Offer/Discount</h3>
+                        </div>
                         <div class="card-body">
                             <form id="add-offer-form">
-                                <div class="row"><div class="col-md-6 mb-3"><label for="add-offer-name" class="form-label">Offer Name:</label><input type="text" class="form-control" id="add-offer-name" name="offerName" required></div><div class="col-md-6 mb-3"><label for="add-discount-type" class="form-label">Discount Type:</label><select class="form-select" id="add-discount-type" name="discountType"><option value="Percentage">Percentage (%)</option><option value="Fixed Amount">Fixed Amount ($)</option></select></div></div>
-                                <div class="mb-3"><label for="add-offer-description" class="form-label">Description:</label><textarea class="form-control" id="add-offer-description" name="offerDescription" rows="3"></textarea></div>
-                                <div class="row"><div class="col-md-6 mb-3"><label for="add-discount-value" class="form-label">Discount Value:</label><input type="number" class="form-control" id="add-discount-value" name="discountValue" required step="any" min="0"></div><div class="col-md-6 mb-3"><label for="add-offer-status" class="form-label">Status:</label><select class="form-select" id="add-offer-status" name="offerStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option><option value="Upcoming">Upcoming</option></select></div></div>
-                                <div class="row"><div class="col-md-6 mb-3"><label for="add-start-date" class="form-label">Start Date:</label><input type="date" class="form-control" id="add-start-date" name="startDate" required></div><div class="col-md-6 mb-3"><label for="add-end-date" class="form-label">End Date:</label><input type="date" class="form-control" id="add-end-date" name="endDate" required></div></div>
-                                <div class="d-flex justify-content-end"><button type="button" class="btn btn-secondary me-2" id="cancel-add-offer-btn">Cancel</button><button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Save Offer</button></div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3"><label for="add-offer-name" class="form-label">Offer
+                                            Name:</label><input type="text" class="form-control" id="add-offer-name"
+                                            name="offerName" required></div>
+                                    <div class="col-md-6 mb-3"><label for="add-discount-type"
+                                            class="form-label">Discount Type:</label><select class="form-select"
+                                            id="add-discount-type" name="discountType">
+                                            <option value="Percentage">Percentage (%)</option>
+                                            <option value="Fixed Amount">Fixed Amount ($)</option>
+                                        </select></div>
+                                </div>
+                                <div class="mb-3"><label for="add-offer-description"
+                                        class="form-label">Description:</label><textarea class="form-control"
+                                        id="add-offer-description" name="offerDescription" rows="3"></textarea></div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3"><label for="add-discount-value"
+                                            class="form-label">Discount Value:</label><input type="number"
+                                            class="form-control" id="add-discount-value" name="discountValue" required
+                                            step="any" min="0"></div>
+                                    <div class="col-md-6 mb-3"><label for="add-offer-status"
+                                            class="form-label">Status:</label><select class="form-select"
+                                            id="add-offer-status" name="offerStatus">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                            <option value="Upcoming">Upcoming</option>
+                                        </select></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3"><label for="add-start-date" class="form-label">Start
+                                            Date:</label><input type="date" class="form-control" id="add-start-date"
+                                            name="startDate" required></div>
+                                    <div class="col-md-6 mb-3"><label for="add-end-date" class="form-label">End
+                                            Date:</label><input type="date" class="form-control" id="add-end-date"
+                                            name="endDate" required></div>
+                                </div>
+                                <div class="d-flex justify-content-end"><button type="button"
+                                        class="btn btn-secondary me-2" id="cancel-add-offer-btn">Cancel</button><button
+                                        type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Save
+                                        Offer</button></div>
                             </form>
                         </div>
                     </div>
-                    <div class="modal fade" id="editOfferModal" tabindex="-1" aria-labelledby="editOfferModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="editOfferModalLabel"><i class="fas fa-edit me-2"></i>Edit Offer/Discount</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="edit-offer-form"><input type="hidden" id="edit-offer-id" name="offerId"><div class="row"><div class="col-md-6 mb-3"><label for="edit-offer-name" class="form-label">Offer Name:</label><input type="text" class="form-control" id="edit-offer-name" name="offerName" required></div><div class="col-md-6 mb-3"><label for="edit-discount-type" class="form-label">Discount Type:</label><select class="form-select" id="edit-discount-type" name="discountType"><option value="Percentage">Percentage (%)</option><option value="Fixed Amount">Fixed Amount ($)</option></select></div></div><div class="mb-3"><label for="edit-offer-description" class="form-label">Description:</label><textarea class="form-control" id="edit-offer-description" name="offerDescription" rows="3"></textarea></div><div class="row"><div class="col-md-6 mb-3"><label for="edit-discount-value" class="form-label">Discount Value:</label><input type="number" class="form-control" id="edit-discount-value" name="discountValue" required step="any" min="0"></div><div class="col-md-6 mb-3"><label for="edit-offer-status" class="form-label">Status:</label><select class="form-select" id="edit-offer-status" name="offerStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option><option value="Expired">Expired</option><option value="Upcoming">Upcoming</option></select></div></div><div class="row"><div class="col-md-6 mb-3"><label for="edit-start-date" class="form-label">Start Date:</label><input type="date" class="form-control" id="edit-start-date" name="startDate" required></div><div class="col-md-6 mb-3"><label for="edit-end-date" class="form-label">End Date:</label><input type="date" class="form-control" id="edit-end-date" name="endDate" required></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button type="submit" form="edit-offer-form" class="btn btn-primary-custom"><i class="fas fa-save me-2"></i>Update Offer</button></div></div></div></div>
+                    <div class="modal fade" id="editOfferModal" tabindex="-1" aria-labelledby="editOfferModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editOfferModalLabel"><i
+                                            class="fas fa-edit me-2"></i>Edit Offer/Discount</h5><button type="button"
+                                        class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="edit-offer-form"><input type="hidden" id="edit-offer-id" name="offerId">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="edit-offer-name"
+                                                    class="form-label">Offer Name:</label><input type="text"
+                                                    class="form-control" id="edit-offer-name" name="offerName" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3"><label for="edit-discount-type"
+                                                    class="form-label">Discount Type:</label><select class="form-select"
+                                                    id="edit-discount-type" name="discountType">
+                                                    <option value="Percentage">Percentage (%)</option>
+                                                    <option value="Fixed Amount">Fixed Amount ($)</option>
+                                                </select></div>
+                                        </div>
+                                        <div class="mb-3"><label for="edit-offer-description"
+                                                class="form-label">Description:</label><textarea class="form-control"
+                                                id="edit-offer-description" name="offerDescription" rows="3"></textarea>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="edit-discount-value"
+                                                    class="form-label">Discount Value:</label><input type="number"
+                                                    class="form-control" id="edit-discount-value" name="discountValue"
+                                                    required step="any" min="0"></div>
+                                            <div class="col-md-6 mb-3"><label for="edit-offer-status"
+                                                    class="form-label">Status:</label><select class="form-select"
+                                                    id="edit-offer-status" name="offerStatus">
+                                                    <option value="Active">Active</option>
+                                                    <option value="Inactive">Inactive</option>
+                                                    <option value="Expired">Expired</option>
+                                                    <option value="Upcoming">Upcoming</option>
+                                                </select></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label for="edit-start-date"
+                                                    class="form-label">Start Date:</label><input type="date"
+                                                    class="form-control" id="edit-start-date" name="startDate" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3"><label for="edit-end-date" class="form-label">End
+                                                    Date:</label><input type="date" class="form-control"
+                                                    id="edit-end-date" name="endDate" required></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer"><button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel</button><button type="submit"
+                                        form="edit-offer-form" class="btn btn-primary-custom"><i
+                                            class="fas fa-save me-2"></i>Update Offer</button></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Customer Feedback View -->
                 <div id="customer-feedback-view" class="view">
                     <div class="view-header d-flex justify-content-between align-items-center mb-4">
                         <h2>Customer Feedback</h2>
-                        <button type="button" class="btn btn-success btn-add" id="addNewFeedbackBtn"><i class="fas fa-plus-circle me-2"></i>Add New Feedback</button>
+                        <button type="button" class="btn btn-success btn-add" id="addNewFeedbackBtn"><i
+                                class="fas fa-plus-circle me-2"></i>Add New Feedback</button>
                     </div>
                     <p>Review and respond to feedback from your customers.</p>
                     <div id="feedback-list" class="row">
                         <div class="col-lg-6 mb-4" data-feedback-id="1">
-                            <div class="card feedback-card"><div class="card-body"><div class="d-flex justify-content-between align-items-start"><div class="feedback-content"><h5>Michael Chen <small class="text-muted ms-2"> - 2 days ago</small></h5><div class="feedback-rating text-warning mb-2" data-rating="4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div><p class="card-text">"The food was delicious, especially the pasta. However, the service was a bit slow during peak hours. Overall a good experience."</p></div><div class="feedback-actions"><button class="btn btn-sm btn-icon btn-primary-custom me-1 edit-feedback-btn" title="Edit Feedback"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-icon btn-danger-custom delete-feedback-btn" title="Delete Feedback"><i class="fas fa-trash-alt"></i></button></div></div></div></div>
+                            <div class="card feedback-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="feedback-content">
+                                            <h5>Michael Chen <small class="text-muted ms-2"> - 2 days ago</small></h5>
+                                            <div class="feedback-rating text-warning mb-2" data-rating="4"><i
+                                                    class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                                    class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                                    class="far fa-star"></i></div>
+                                            <p class="card-text">"The food was delicious, especially the pasta. However,
+                                                the service was a bit slow during peak hours. Overall a good
+                                                experience."</p>
+                                        </div>
+                                        <div class="feedback-actions"><button
+                                                class="btn btn-sm btn-icon btn-primary-custom me-1 edit-feedback-btn"
+                                                title="Edit Feedback"><i class="fas fa-edit"></i></button><button
+                                                class="btn btn-sm btn-icon btn-danger-custom delete-feedback-btn"
+                                                title="Delete Feedback"><i class="fas fa-trash-alt"></i></button></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-lg-6 mb-4" data-feedback-id="2">
-                            <div class="card feedback-card"><div class="card-body"><div class="d-flex justify-content-between align-items-start"><div class="feedback-content"><h5>Sarah Davis <small class="text-muted ms-2"> - 5 days ago</small></h5><div class="feedback-rating text-warning mb-2" data-rating="5"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="card-text">"Absolutely amazing! The ambiance, the food, the service - everything was perfect. Will definitely be coming back soon!"</p></div><div class="feedback-actions"><button class="btn btn-sm btn-icon btn-primary-custom me-1 edit-feedback-btn" title="Edit Feedback"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-icon btn-danger-custom delete-feedback-btn" title="Delete Feedback"><i class="fas fa-trash-alt"></i></button></div></div></div></div>
+                            <div class="card feedback-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="feedback-content">
+                                            <h5>Sarah Davis <small class="text-muted ms-2"> - 5 days ago</small></h5>
+                                            <div class="feedback-rating text-warning mb-2" data-rating="5"><i
+                                                    class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                                    class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                                    class="fas fa-star"></i></div>
+                                            <p class="card-text">"Absolutely amazing! The ambiance, the food, the
+                                                service - everything was perfect. Will definitely be coming back soon!"
+                                            </p>
+                                        </div>
+                                        <div class="feedback-actions"><button
+                                                class="btn btn-sm btn-icon btn-primary-custom me-1 edit-feedback-btn"
+                                                title="Edit Feedback"><i class="fas fa-edit"></i></button><button
+                                                class="btn btn-sm btn-icon btn-danger-custom delete-feedback-btn"
+                                                title="Delete Feedback"><i class="fas fa-trash-alt"></i></button></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                     <!-- Feedback Modal -->
-                    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+                    <!-- Feedback Modal -->
+                    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel"
+                        aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="feedbackModalLabel">Feedback Details</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form id="feedbackForm">
@@ -339,13 +1428,16 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="feedbackComment" class="form-label">Comment</label>
-                                            <textarea class="form-control" id="feedbackComment" rows="4" required></textarea>
+                                            <textarea class="form-control" id="feedbackComment" rows="4"
+                                                required></textarea>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" form="feedbackForm" class="btn btn-primary-custom" id="saveFeedbackBtn">Save Changes</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" form="feedbackForm" class="btn btn-primary-custom"
+                                        id="saveFeedbackBtn">Save Changes</button>
                                 </div>
                             </div>
                         </div>
@@ -361,18 +1453,29 @@
                             <form id="settingsForm">
                                 <h5 class="form-section-title">Restaurant Information</h5>
                                 <div class="row">
-                                    <div class="col-md-6 mb-3"><label for="restaurantName" class="form-label">Restaurant Name</label><input type="text" class="form-control" id="restaurantName" value="The Gourmet Place"></div>
-                                    <div class="col-md-6 mb-3"><label for="restaurantPhone" class="form-label">Contact Phone</label><input type="tel" class="form-control" id="restaurantPhone" value="+1-202-555-0186"></div>
+                                    <div class="col-md-6 mb-3"><label for="restaurantName" class="form-label">Restaurant
+                                            Name</label><input type="text" class="form-control" id="restaurantName"
+                                            value="The Gourmet Place"></div>
+                                    <div class="col-md-6 mb-3"><label for="restaurantPhone" class="form-label">Contact
+                                            Phone</label><input type="tel" class="form-control" id="restaurantPhone"
+                                            value="+1-202-555-0186"></div>
                                 </div>
-                                <div class="mb-3"><label for="restaurantAddress" class="form-label">Address</label><input type="text" class="form-control" id="restaurantAddress" value="742 Evergreen Terrace, Springfield"></div>
+                                <div class="mb-3"><label for="restaurantAddress"
+                                        class="form-label">Address</label><input type="text" class="form-control"
+                                        id="restaurantAddress" value="742 Evergreen Terrace, Springfield"></div>
                                 <hr class="my-4">
                                 <h5 class="form-section-title">Financial Settings</h5>
                                 <div class="row">
-                                    <div class="col-md-6 mb-3"><label for="currencySymbol" class="form-label">Currency Symbol</label><input type="text" class="form-control" id="currencySymbol" value="$"></div>
-                                    <div class="col-md-6 mb-3"><label for="taxRate" class="form-label">Tax Rate (%)</label><input type="number" class="form-control" id="taxRate" value="8.5"></div>
+                                    <div class="col-md-6 mb-3"><label for="currencySymbol" class="form-label">Currency
+                                            Symbol</label><input type="text" class="form-control" id="currencySymbol"
+                                            value="$"></div>
+                                    <div class="col-md-6 mb-3"><label for="taxRate" class="form-label">Tax Rate
+                                            (%)</label><input type="number" class="form-control" id="taxRate"
+                                            value="8.5"></div>
                                 </div>
                                 <div class="d-flex justify-content-end mt-3">
-                                    <button type="submit" class="btn btn-primary-custom btn-lg"><i class="fas fa-save me-2"></i>Save Settings</button>
+                                    <button type="submit" class="btn btn-primary-custom btn-lg"><i
+                                            class="fas fa-save me-2"></i>Save Settings</button>
                                 </div>
                             </form>
                         </div>
@@ -397,5 +1500,105 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'admind/assets/js/script.js' %}"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Open the Bootstrap Modal
+    const addBookingBtn = document.getElementById('addNewBookingBtn');
+    const addOrderModalEl = document.getElementById('addOrderModal');
+    const addOrderModal = new bootstrap.Modal(addOrderModalEl);
+
+    addBookingBtn.addEventListener('click', function () {
+        addOrderModal.show();
+    });
+
+    // Handle Add Order Form Submission
+    const addOrderForm = document.getElementById('addOrderForm');
+    addOrderForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const customer = document.getElementById('customerName').value.trim();
+        const time = document.getElementById('orderTime').value.trim();
+        const status = document.getElementById('orderStatus').value;
+
+        if (!customer || !time || !status) {
+            alert("Please fill out all fields.");
+            return;
+        }
+
+        // Send to backend
+        fetch('/api/orders/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ 
+                customer_name: customer,
+                order_type: 'Dine-in',  // Default order_type
+                items: [],  // Empty items allowed now
+                status: status,
+                order_time: time  // Extra field, will be saved in MongoDB
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.message) {
+                alert('Order created successfully! ID: ' + data.order_id);
+                location.reload();
+            } else {
+                alert("Failed to create the order: " + data.error);
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert("Error creating order.");
+        });
+
+        addOrderModal.hide();
+        addOrderForm.reset();
+    });
+
+    // Delete Order
+    const deleteButtons = document.querySelectorAll('.delete-order-btn');
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+            const orderId = this.dataset.id;
+
+            fetch(`/api/orders/${orderId}/`, {
+                method: 'DELETE',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.message) {
+                    alert("Order deleted successfully.");
+                    location.reload();
+                } else {
+                    alert("Failed to delete the order.");
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert("Error deleting order.");
+            });
+        });
+    });
+
+    // Get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
 </body>
+
 </html>
