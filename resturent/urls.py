@@ -18,7 +18,8 @@ urlpatterns = [
     path('api/orders/<str:order_id>/status/', views.update_order_status, name='update_order_status'),
     path('api/bookings/', views.bookings_api, name='bookings_api'),
     path('api/bookings/<str:booking_id>/', views.booking_detail_api, name='booking_detail_api'),
-    # Menu items API
     path('api/menu-items/', views.menu_items_api, name='menu_items_api'),
     path('api/menu-items/<str:item_id>/', views.menu_item_detail_api, name='menu_item_detail_api'),
+    path('api/deliveries/', views.deliveries_api, name='deliveries_api'),
+    path('api/deliveries/<str:delivery_id>/', views.delivery_detail_api, name='delivery_detail_api'),
 ]

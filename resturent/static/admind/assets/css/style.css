@@ -732,3 +732,49 @@ body.dark-mode .bg-success-custom, body.dark-mode .status-active, body.dark-mode
         grid-template-columns: 1fr;
     }
 }
+
+/* Existing styles (add these to your existing CSS file) */
+.status-ready-for-pickup {
+    background-color: #ffc107; /* Yellow for Ready for Pickup */
+    color: #fff;
+}
+.status-out-for-delivery {
+    background-color: #17a2b8; /* Cyan for Out for Delivery */
+    color: #fff;
+}
+.status-delivered {
+    background-color: #28a745; /* Green for Delivered */
+    color: #fff;
+}
+.status-cancelled {
+    background-color: #dc3545; /* Red for Cancelled */
+    color: #fff;
+}
+
+/* Ensure badge styling is consistent */
+.badge {
+    padding: 0.5em 1em;
+    font-size: 0.875em;
+    border-radius: 0.25rem;
+}
+
+/* Button styles */
+.btn-primary-custom {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.btn-primary-custom:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+.btn-danger-custom {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+.btn-danger-custom:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+.btn-icon {
+    padding: 0.25rem 0.5rem;
+}
