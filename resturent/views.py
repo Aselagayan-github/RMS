@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from bson.objectid import ObjectId
 from django.http import JsonResponse
-<<<<<<< HEAD
+
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -15,8 +15,7 @@ import logging
 
 # Set up logger
 logger = logging.getLogger(__name__)
-=======
->>>>>>> dc3a1344b186dbf4b22f6d3fb00222429da98b8e
+
 
 # MongoDB client setup
 client = MongoClient('mongodb://localhost:27017/')
@@ -142,7 +141,6 @@ def send_email(to_email, user_name):
     except Exception as e:
         logger.error(f"Error sending email: {e}")
 
-<<<<<<< HEAD
 def order_management_view(request):
     """Render the order management page"""
     return render(request, 'order_management.html')
@@ -415,7 +413,7 @@ def get_order_statistics(request):
     except Exception as e:
         logger.error(f"Error getting order statistics: {e}")
         return JsonResponse({'error': 'Failed to get statistics', 'message': str(e)}, status=500)
-=======
+
 # Save new order
 def order_processing_view(request):
     if request.method == 'GET':
@@ -445,7 +443,7 @@ def delete_order(request, order_id):
         order_collection.delete_one({'_id': ObjectId(order_id)})
         return JsonResponse({'success': True})
 
->>>>>>> dc3a1344b186dbf4b22f6d3fb00222429da98b8e
+
 
 @csrf_exempt
 def update_order_status(request, order_id):
