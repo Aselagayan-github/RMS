@@ -23,7 +23,7 @@
     --view-h2-border: #eee;
     --card-bg: #ffffff;
     --card-border: #e0e0e0;
-    --card-shadow: rgba(0, 0, 0, 0.05);
+    --card-shadow: rgba(0,0,0,0.05);
     --card-h4-color: #3498db;
     --card-p-color: #2c3e50;
     --button-bg: #3498db;
@@ -39,7 +39,7 @@
 
 body.dark-mode {
     --body-bg: #1a1a2e;
-    --text-color: #eb0000;
+    --text-color: #e0e0e0;
     --sidebar-bg: #162447;
     --sidebar-text-color: #e0e0e0;
     --sidebar-border-color: #1f4068;
@@ -61,7 +61,7 @@ body.dark-mode {
     --view-h2-border: #333;
     --card-bg: #1f2a40;
     --card-border: #303f5a;
-    --card-shadow: rgba(0, 0, 0, 0.15);
+    --card-shadow: rgba(0,0,0,0.15);
     --card-h4-color: #50fa7b;
     --card-p-color: #e0e0e0;
     --button-bg: #50fa7b;
@@ -73,8 +73,7 @@ body.dark-mode {
     --info-color: #3498db;
 }
 
-body,
-html {
+body, html {
     margin: 0;
     padding: 0;
     font-family: var(--font-primary);
@@ -88,13 +87,7 @@ html {
     box-sizing: border-box;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.modal-title {
+h1, h2, h3, h4, h5, h6, .modal-title {
     font-family: var(--font-secondary);
 }
 
@@ -115,11 +108,11 @@ h6,
     overflow-y: auto;
     z-index: 1000;
     transition: width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
 body.dark-mode .navbar-side {
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
 }
 
 .user-info {
@@ -226,7 +219,7 @@ body.dark-mode .navbar-side {
 }
 
 body.dark-mode .content-header {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .content-header h1 {
@@ -287,15 +280,8 @@ body.dark-mode .theme-toggle-button:hover {
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .view h2 {
@@ -309,7 +295,7 @@ body.dark-mode .theme-toggle-button:hover {
     transition: color 0.3s ease, border-bottom-color 0.3s ease;
 }
 
-.view>p {
+.view > p {
     color: var(--sidebar-user-email-color);
     font-size: 0.95em;
 }
@@ -422,8 +408,7 @@ body.dark-mode .card .card-header {
 }
 
 .table tbody td {
-    color: #ff0000;
-    /* Changed to red for table values */
+    color: #ff0000; /* Changed to red for table values */
     vertical-align: middle;
     border-color: var(--card-border) !important;
     padding: 0.85rem 1rem;
@@ -434,14 +419,11 @@ body.dark-mode .card .card-header {
 }
 
 body.dark-mode .table-hover tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: rgba(255,255,255,0.03);
 }
 
 /* Button and Badge Styles */
-.btn-add-user,
-.btn-add-offer,
-.btn-add,
-#addNewBookingBtn {
+.btn-add-user, .btn-add-offer, .btn-add, #addNewBookingBtn {
     background-color: var(--success-color);
     border-color: var(--success-color);
     color: white;
@@ -449,10 +431,7 @@ body.dark-mode .table-hover tbody tr:hover {
     padding: 0.5rem 1rem;
 }
 
-.btn-add-user:hover,
-.btn-add-offer:hover,
-.btn-add:hover,
-#addNewBookingBtn:hover {
+.btn-add-user:hover, .btn-add-offer:hover, .btn-add:hover, #addNewBookingBtn:hover {
     background-color: var(--success-color);
     opacity: 0.9;
     color: white;
@@ -514,29 +493,22 @@ body.dark-mode .btn-success-custom {
 }
 
 /* Status-specific Badges */
-.status-pending,
-.status-upcoming {
+.status-pending, .status-upcoming {
     background-color: var(--warning-color) !important;
     color: #333 !important;
 }
 
-.status-preparing,
-.status-out-for-delivery {
+.status-preparing, .status-out-for-delivery {
     background-color: var(--info-color) !important;
     color: white !important;
 }
 
-.status-completed,
-.status-delivered,
-.status-paid,
-.status-confirmed,
-.status-active {
+.status-completed, .status-delivered, .status-paid, .status-confirmed, .status-active {
     background-color: var(--success-color) !important;
     color: white !important;
 }
 
-.status-unpaid,
-.status-cancelled {
+.status-unpaid, .status-cancelled {
     background-color: var(--danger-color) !important;
     color: white !important;
 }
@@ -551,9 +523,7 @@ body.dark-mode .btn-success-custom {
     color: var(--button-text) !important;
 }
 
-.bg-secondary-custom,
-.status-inactive,
-.status-expired {
+.bg-secondary-custom, .status-inactive, .status-expired {
     background-color: #6c757d !important;
     color: white !important;
 }
@@ -563,44 +533,35 @@ body.dark-mode .btn-success-custom {
     color: white !important;
 }
 
-body.dark-mode .bg-success-custom,
-body.dark-mode .status-active,
-body.dark-mode .status-completed {
+body.dark-mode .bg-success-custom, body.dark-mode .status-active, body.dark-mode .status-completed {
     color: #111;
 }
 
 /* Form Card Styling */
-.form-card .card-header,
-.report-controls-card .card-header {
+.form-card .card-header, .report-controls-card .card-header {
     background-color: var(--sidebar-bg);
     color: var(--sidebar-text-color);
     border-bottom: 1px solid var(--sidebar-border-color);
     padding: 1rem 1.5rem;
 }
 
-.form-card .card-body,
-.report-controls-card .card-body {
+.form-card .card-body, .report-controls-card .card-body {
     padding: 1.5rem;
 }
 
-.form-card .form-label,
-.report-controls-card .form-label {
+.form-card .form-label, .report-controls-card .form-label {
     font-weight: 500;
     font-family: var(--font-secondary);
     margin-bottom: 0.5rem;
 }
 
-.form-card .form-control,
-.form-card .form-select,
-.report-controls-card .form-control {
+.form-card .form-control, .form-card .form-select, .report-controls-card .form-control {
     background-color: var(--body-bg);
     color: var(--text-color);
     border: 1px solid var(--card-border);
 }
 
-.form-card .form-control:focus,
-.form-card .form-select:focus,
-.report-controls-card .form-control:focus {
+.form-card .form-control:focus, .form-card .form-select:focus, .report-controls-card .form-control:focus {
     border-color: var(--sidebar-hover-border-accent);
     box-shadow: 0 0 0 0.25rem rgba(var(--rgb-sidebar-hover-border-accent), 0.25);
 }
@@ -631,7 +592,7 @@ body.dark-mode .status-completed {
 .modal-header .modal-title {
     font-family: var(--font-secondary);
     font-weight: 600;
-    color: greenyellow;
+    color: var(--sidebar-text-color);
     font-size: 1.25rem;
 }
 
@@ -649,15 +610,13 @@ body.dark-mode .status-completed {
     padding: 1rem 1.5rem;
 }
 
-.modal-body .form-control,
-.modal-body .form-select {
+.modal-body .form-control, .modal-body .form-select {
     background-color: var(--body-bg);
     color: var(--text-color);
     border: 1px solid var(--card-border);
 }
 
-.modal-body .form-control:focus,
-.modal-body .form-select:focus {
+.modal-body .form-control:focus, .modal-body .form-select:focus {
     background-color: var(--body-bg);
     color: var(--text-color);
     border-color: var(--sidebar-hover-border-accent);
@@ -671,7 +630,7 @@ body.dark-mode .status-completed {
 }
 
 .modal-title i {
-    color: greenyellow;
+    color: var(--sidebar-active-bg);
 }
 
 /* Customer Feedback Card */
@@ -746,42 +705,29 @@ body.dark-mode .status-completed {
         transform: translateX(-260px);
         width: 260px;
     }
-
     .content-area {
         margin-left: 0;
     }
-
     .content-header {
         padding: 10px 15px;
     }
-
     .content-header h1 {
         font-size: 1.3em;
     }
-
     .view-header {
         flex-direction: column;
         align-items: flex-start;
     }
-
-    .view-header .btn-add,
-    .view-header .btn-add-user,
-    .view-header .btn-add-offer {
+    .view-header .btn-add, .view-header .btn-add-user, .view-header .btn-add-offer {
         margin-top: 15px;
         width: 100%;
     }
-
-    .user-table th:nth-child(3),
-    .user-table td:nth-child(3),
-    .user-table th:nth-child(5),
-    .user-table td:nth-child(5),
-    .offers-table th:nth-child(3),
-    .offers-table td:nth-child(3),
-    .offers-table th:nth-child(4),
-    .offers-table td:nth-child(4) {
+    .user-table th:nth-child(3), .user-table td:nth-child(3),
+    .user-table th:nth-child(5), .user-table td:nth-child(5),
+    .offers-table th:nth-child(3), .offers-table td:nth-child(3),
+    .offers-table th:nth-child(4), .offers-table td:nth-child(4) {
         display: none;
     }
-
     .stats-cards {
         grid-template-columns: 1fr;
     }

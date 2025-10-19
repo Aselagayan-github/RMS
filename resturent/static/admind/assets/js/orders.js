@@ -22,12 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Optional: Send to backend
-<<<<<<< HEAD
-        
-=======
-        /*
->>>>>>> dc3a1344b186dbf4b22f6d3fb00222429da98b8e
+
         fetch('/add-order/', {
             method: 'POST',
             headers: {
@@ -42,11 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 location.reload();
             }
         });
-<<<<<<< HEAD
-        
-=======
-        */
->>>>>>> dc3a1344b186dbf4b22f6d3fb00222429da98b8e
 
         // Add to table directly (Frontend only)
         const tbody = document.getElementById('order-processing-tbody');

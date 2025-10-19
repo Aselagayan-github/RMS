@@ -6,7 +6,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from bson.objectid import ObjectId
 from django.http import JsonResponse
-
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -15,7 +14,6 @@ import logging
 
 # Set up logger
 logger = logging.getLogger(__name__)
-
 
 # MongoDB client setup
 client = MongoClient('mongodb://localhost:27017/')
@@ -413,37 +411,6 @@ def get_order_statistics(request):
     except Exception as e:
         logger.error(f"Error getting order statistics: {e}")
         return JsonResponse({'error': 'Failed to get statistics', 'message': str(e)}, status=500)
-
-# Save new order
-def order_processing_view(request):
-    if request.method == 'GET':
-        # Fetch all orders from MongoDB
-        orders = list(order_collection.find())
-        for order in orders:
-            order['_id'] = str(order['_id'])  # Convert ObjectId to string for frontend
-        return render(request, 'order_processing.html', {'orders': orders})
-
-
-@csrf_exempt
-def add_order(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        order_data = {
-            'customer': data.get('customer'),
-            'time': data.get('time'),
-            'status': data.get('status')
-        }
-        result = order_collection.insert_one(order_data)
-        return JsonResponse({'success': True, 'order_id': str(result.inserted_id)})
-
-
-@csrf_exempt
-def delete_order(request, order_id):
-    if request.method == 'POST':
-        order_collection.delete_one({'_id': ObjectId(order_id)})
-        return JsonResponse({'success': True})
-
-
 
 @csrf_exempt
 def update_order_status(request, order_id):
