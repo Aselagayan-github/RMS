@@ -36,8 +36,12 @@
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse">
                 <div class="user-info">
+<<<<<<< HEAD
                     <img src="{% static 'admind/assets/img/find_user.png' %}" class="user-image img-responsive"
                         alt="Admin User" />
+=======
+                    <img src="{% static 'admind/assets/img/find_user.png' %}" class="user-image img-responsive" alt="Admin User" />
+>>>>>>> dc3a1344b186dbf4b22f6d3fb00222429da98b8e
                     <h3>Admin Name</h3>
                     <p>admin@example.com</p>
                 </div>
@@ -124,6 +128,7 @@
 
                 <!-- Order Processing View -->
                 <div id="order-processing-view" class="view">
+<<<<<<< HEAD
                     <div class="container-fluid py-4">
                         <div class="row">
                             <div class="col-12">
@@ -281,6 +286,112 @@
                                     <button type="button" class="btn btn-primary-custom" id="saveOrderBtn">
                                         <i class="fas fa-save"></i> Create Order
                                     </button>
+                                </div>
+=======
+                    <div class="view-header d-flex justify-content-between align-items-center mb-4">
+                        <h2>Order Processing</h2>
+                        <button type="button" class="btn btn-success btn-add" data-bs-toggle="modal" data-bs-target="#orderModal">
+                            <i class="fas fa-plus-circle me-2"></i>Create New Order
+                        </button>
+                    </div>
+                    <p>Manage incoming customer orders in real-time.</p>
+                    <div class="card table-card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead><tr><th>Order ID</th><th>Customer</th><th>Time</th><th>Status</th><th class="text-center">Actions</th></tr></thead>
+                                    <tbody id="order-processing-tbody">
+                                        <tr data-order-id="101"><td>#101</td><td>John Doe</td><td>12:05 PM</td><td><span class="badge status-preparing">Preparing</span></td><td class="text-center"><button class="btn btn-sm btn-info-custom me-1 view-order-details-btn"><i class="fas fa-eye"></i> View</button><button class="btn btn-sm btn-success-custom update-order-status-btn"><i class="fas fa-check-circle"></i> Mark Ready</button></td></tr>
+                                        <tr data-order-id="102"><td>#102</td><td>Jane Smith</td><td>11:58 AM</td><td><span class="badge status-pending">Pending</span></td><td class="text-center"><button class="btn btn-sm btn-info-custom me-1 view-order-details-btn"><i class="fas fa-eye"></i> View</button><button class="btn btn-sm btn-primary-custom update-order-status-btn"><i class="fas fa-play-circle"></i> Start Prep</button></td></tr>
+                                        <tr data-order-id="100"><td>#100</td><td>Peter Jones</td><td>11:45 AM</td><td><span class="badge status-completed">Completed</span></td><td class="text-center"><button class="btn btn-sm btn-info-custom me-1 view-order-details-btn"><i class="fas fa-eye"></i> View</button><button class="btn btn-sm btn-secondary" disabled><i class="fas fa-history"></i> Done</button></td></tr>
+                                    </tbody>
+                                </table>
+>>>>>>> dc3a1344b186dbf4b22f6d3fb00222429da98b8e
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New Order Modal -->
+                    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="orderModalLabel">Create New Order</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="orderForm">
+                                        <input type="hidden" id="orderId" name="orderId">
+                                        <!-- Customer Information -->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="orderCustomerName" class="form-label">Customer Name</label>
+                                                <input type="text" class="form-control" id="orderCustomerName" placeholder="Enter customer name" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="orderType" class="form-label">Order Type</label>
+                                                <select id="orderType" class="form-select" required>
+                                                    <option value="Dine-in">Dine-in</option>
+                                                    <option value="Takeaway">Takeaway</option>
+                                                    <option value="Delivery">Delivery</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr class="my-3">
+                                        <!-- Order Items Section -->
+                                        <h5 class="mb-3">Order Items</h5>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 50%;">Item</th>
+                                                        <th style="width: 15%;">Qty</th>
+                                                        <th class="text-end" style="width: 20%;">Price</th>
+                                                        <th class="text-center" style="width: 15%;">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="orderItemsList">
+                                                    <!-- Dynamically added items will go here -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Add Item Form -->
+                                        <div class="row g-2 align-items-end p-2 bg-light rounded">
+                                            <div class="col-md-5">
+                                                <label for="selectMenuItem" class="form-label mb-1 small">Select Item</label>
+                                                <select id="selectMenuItem" class="form-select form-select-sm">
+                                                    <option selected disabled>Choose...</option>
+                                                    <option value="1" data-price="12.50">Classic Burger</option>
+                                                    <option value="2" data-price="8.00">Caesar Salad</option>
+                                                    <option value="3" data-price="7.50">Tiramisu</option>
+                                                    <option value="4" data-price="3.00">Soft Drink</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="itemQuantity" class="form-label mb-1 small">Quantity</label>
+                                                <input type="number" id="itemQuantity" class="form-control form-control-sm" value="1" min="1">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <button type="button" class="btn btn-sm btn-outline-primary w-100" id="addItemToOrderBtn">
+                                                    <i class="fas fa-plus"></i> Add Item
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <hr class="my-3">
+                                        <!-- Order Summary -->
+                                        <div class="row justify-content-end">
+                                            <div class="col-md-5">
+                                                <div class="d-flex justify-content-between mb-1"><span>Subtotal:</span> <span id="orderSubtotal">$0.00</span></div>
+                                                <div class="d-flex justify-content-between mb-2"><span>Tax (8.5%):</span> <span id="orderTax">$0.00</span></div>
+                                                <div class="d-flex justify-content-between fw-bold h5"><span>Total:</span> <span id="orderTotal">$0.00</span></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" form="orderForm" class="btn btn-primary-custom" id="saveOrderBtn">Create Order</button>
                                 </div>
                             </div>
                         </div>
