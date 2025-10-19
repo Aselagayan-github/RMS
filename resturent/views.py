@@ -11,6 +11,9 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from datetime import datetime
 import logging
+import base64
+from io import BytesIO
+from PIL import Image
 
 # Set up logger
 logger = logging.getLogger(__name__)
@@ -20,6 +23,8 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client['resturent']
 users_collection = db['users']
 order_collection = db['order_table']
+bookings_collection = db['bookings']
+menu_items_collection = db['menu_items']  # Added for menu items
 
 # Email credentials
 EMAIL_ADDRESS = 'aselagayan1010@gmail.com'
@@ -357,7 +362,7 @@ def delete_order(request, order_id):
         logger.error(f"Error deleting order {order_id}: {e}")
         return JsonResponse({'error': 'Failed to delete order', 'message': str(e)}, status=500)
 
-# Additional utility functions
+# Additional utility functions for orders
 
 def get_order_statistics(request):
     """Get order statistics for dashboard"""
@@ -450,3 +455,482 @@ def update_order_status(request, order_id):
     except Exception as e:
         logger.error(f"Error updating order status {order_id}: {e}")
         return JsonResponse({'error': 'Failed to update order status', 'message': str(e)}, status=500)
+
+# ========== BOOKING MANAGEMENT API ENDPOINTS ==========
+
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
+def bookings_api(request):
+    """
+    GET: Retrieve all bookings
+    POST: Create a new booking
+    """
+    if request.method == 'GET':
+        return get_all_bookings(request)
+    elif request.method == 'POST':
+        return create_booking(request)
+
+@csrf_exempt
+@require_http_methods(["GET", "PUT", "DELETE"])
+def booking_detail_api(request, booking_id):
+    """
+    GET: Retrieve a specific booking
+    PUT: Update a specific booking
+    DELETE: Delete a specific booking
+    """
+    if request.method == 'GET':
+        return get_booking(request, booking_id)
+    elif request.method == 'PUT':
+        return update_booking(request, booking_id)
+    elif request.method == 'DELETE':
+        return delete_booking(request, booking_id)
+
+def get_all_bookings(request):
+    """Retrieve all bookings from MongoDB"""
+    try:
+        # Get query parameters for filtering and pagination
+        status = request.GET.get('status')
+        customer_name = request.GET.get('customer_name')
+        date = request.GET.get('date')
+        limit = int(request.GET.get('limit', 100))
+        skip = int(request.GET.get('skip', 0))
+        
+        # Build query
+        query = {}
+        if status:
+            query['status'] = status
+        if customer_name:
+            query['customer_name'] = {'$regex': customer_name, '$options': 'i'}
+        if date:
+            query['date'] = date
+        
+        # Retrieve bookings with sorting (newest first)
+        bookings_cursor = bookings_collection.find(query).sort('created_at', -1).limit(limit).skip(skip)
+        bookings = []
+        
+        for booking in bookings_cursor:
+            # Convert ObjectId to string for JSON serialization
+            booking['_id'] = str(booking['_id'])
+            
+            # Ensure created_at exists
+            if 'created_at' not in booking:
+                booking['created_at'] = datetime.now().isoformat()
+            
+            bookings.append(booking)
+        
+        return JsonResponse(bookings, safe=False, status=200)
+    
+    except Exception as e:
+        logger.error(f"Error retrieving bookings: {e}")
+        return JsonResponse({'error': 'Failed to retrieve bookings', 'message': str(e)}, status=500)
+
+def create_booking(request):
+    """Create a new booking"""
+    try:
+        data = json.loads(request.body)
+        
+        # Validate required fields
+        required_fields = ['customer_name', 'phone', 'date', 'time', 'guests', 'status']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                return JsonResponse({'error': f'Missing required field: {field}'}, status=400)
+        
+        # Validate guests is a positive integer
+        try:
+            guests = int(data['guests'])
+            if guests < 1:
+                raise ValueError
+        except ValueError:
+            return JsonResponse({'error': 'Guests must be a positive integer'}, status=400)
+        
+        # Validate status
+        valid_statuses = ['Confirmed', 'Pending', 'Cancelled']
+        if data['status'] not in valid_statuses:
+            return JsonResponse({'error': f'Invalid status. Must be one of: {valid_statuses}'}, status=400)
+        
+        # Add timestamps
+        data['created_at'] = datetime.now().isoformat()
+        data['updated_at'] = datetime.now().isoformat()
+        
+        # Insert booking into MongoDB
+        result = bookings_collection.insert_one(data)
+        
+        # Return the created booking with ID
+        data['_id'] = str(result.inserted_id)
+        
+        logger.info(f"Booking created successfully: {result.inserted_id}")
+        return JsonResponse({
+            'message': 'Booking created successfully',
+            'booking_id': str(result.inserted_id),
+            'booking': data
+        }, status=201)
+    
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error creating booking: {e}")
+        return JsonResponse({'error': 'Failed to create booking', 'message': str(e)}, status=500)
+
+def get_booking(request, booking_id):
+    """Retrieve a specific booking by ID"""
+    try:
+        # Validate ObjectId format
+        if not ObjectId.is_valid(booking_id):
+            return JsonResponse({'error': 'Invalid booking ID format'}, status=400)
+        
+        # Find the booking
+        booking = bookings_collection.find_one({'_id': ObjectId(booking_id)})
+        
+        if not booking:
+            return JsonResponse({'error': 'Booking not found'}, status=404)
+        
+        # Convert ObjectId to string for JSON serialization
+        booking['_id'] = str(booking['_id'])
+        
+        return JsonResponse(booking, status=200)
+    
+    except Exception as e:
+        logger.error(f"Error retrieving booking {booking_id}: {e}")
+        return JsonResponse({'error': 'Failed to retrieve booking', 'message': str(e)}, status=500)
+
+def update_booking(request, booking_id):
+    """Update a specific booking"""
+    try:
+        # Validate ObjectId format
+        if not ObjectId.is_valid(booking_id):
+            return JsonResponse({'error': 'Invalid booking ID format'}, status=400)
+        
+        data = json.loads(request.body)
+        
+        # Add updated timestamp
+        data['updated_at'] = datetime.now().isoformat()
+        
+        # Validate if status is being updated
+        if 'status' in data:
+            valid_statuses = ['Confirmed', 'Pending', 'Cancelled']
+            if data['status'] not in valid_statuses:
+                return JsonResponse({'error': f'Invalid status. Must be one of: {valid_statuses}'}, status=400)
+        
+        # Validate guests if being updated
+        if 'guests' in data:
+            try:
+                guests = int(data['guests'])
+                if guests < 1:
+                    raise ValueError
+            except ValueError:
+                return JsonResponse({'error': 'Guests must be a positive integer'}, status=400)
+        
+        # Update the booking
+        result = bookings_collection.update_one(
+            {'_id': ObjectId(booking_id)},
+            {'$set': data}
+        )
+        
+        if result.matched_count == 0:
+            return JsonResponse({'error': 'Booking not found'}, status=404)
+        
+        # Retrieve and return updated booking
+        updated_booking = bookings_collection.find_one({'_id': ObjectId(booking_id)})
+        updated_booking['_id'] = str(updated_booking['_id'])
+        
+        logger.info(f"Booking updated successfully: {booking_id}")
+        return JsonResponse({
+            'message': 'Booking updated successfully',
+            'booking': updated_booking
+        }, status=200)
+    
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error updating booking {booking_id}: {e}")
+        return JsonResponse({'error': 'Failed to update booking', 'message': str(e)}, status=500)
+
+def delete_booking(request, booking_id):
+    """Delete a specific booking"""
+    try:
+        # Validate ObjectId format
+        if not ObjectId.is_valid(booking_id):
+            return JsonResponse({'error': 'Invalid booking ID format'}, status=400)
+        
+        # Delete the booking
+        result = bookings_collection.delete_one({'_id': ObjectId(booking_id)})
+        
+        if result.deleted_count == 0:
+            return JsonResponse({'error': 'Booking not found'}, status=404)
+        
+        logger.info(f"Booking deleted successfully: {booking_id}")
+        return JsonResponse({'message': 'Booking deleted successfully'}, status=200)
+    
+    except Exception as e:
+        logger.error(f"Error deleting booking {booking_id}: {e}")
+        return JsonResponse({'error': 'Failed to delete booking', 'message': str(e)}, status=500)
+
+# ========== MENU MANAGEMENT API ENDPOINTS ==========
+
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
+def menu_items_api(request):
+    """
+    GET: Retrieve all menu items
+    POST: Create a new menu item
+    """
+    if request.method == 'GET':
+        return get_all_menu_items(request)
+    elif request.method == 'POST':
+        return create_menu_item(request)
+
+@csrf_exempt
+@require_http_methods(["GET", "PUT", "DELETE"])
+def menu_item_detail_api(request, item_id):
+    """
+    GET: Retrieve a specific menu item
+    PUT: Update a specific menu item
+    DELETE: Delete a specific menu item
+    """
+    if request.method == 'GET':
+        return get_menu_item(request, item_id)
+    elif request.method == 'PUT':
+        return update_menu_item(request, item_id)
+    elif request.method == 'DELETE':
+        return delete_menu_item(request, item_id)
+
+def get_all_menu_items(request):
+    """Retrieve all menu items from MongoDB"""
+    try:
+        # Get query parameters for filtering and pagination
+        category = request.GET.get('category')
+        availability = request.GET.get('availability')
+        limit = int(request.GET.get('limit', 100))
+        skip = int(request.GET.get('skip', 0))
+        
+        # Build query
+        query = {}
+        if category:
+            query['category'] = category
+        if availability:
+            query['availability'] = availability
+        
+        # Retrieve menu items with sorting (newest first)
+        items_cursor = menu_items_collection.find(query).sort('created_at', -1).limit(limit).skip(skip)
+        items = []
+        
+        for item in items_cursor:
+            # Convert ObjectId to string for JSON serialization
+            item['_id'] = str(item['_id'])
+            # Ensure created_at exists
+            if 'created_at' not in item:
+                item['created_at'] = datetime.now().isoformat()
+            items.append(item)
+        
+        return JsonResponse(items, safe=False, status=200)
+    
+    except Exception as e:
+        logger.error(f"Error retrieving menu items: {e}")
+        return JsonResponse({'error': 'Failed to retrieve menu items', 'message': str(e)}, status=500)
+
+def create_menu_item(request):
+    """Create a new menu item"""
+    try:
+        # Check if the request is multipart (contains file)
+        if 'multipart/form-data' in request.content_type.lower():
+            data = json.loads(request.POST.get('data', '{}'))
+            image_file = request.FILES.get('image')
+        else:
+            data = json.loads(request.body)
+            image_file = None
+
+        # Validate required fields
+        required_fields = ['name', 'category', 'price', 'availability']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                return JsonResponse({'error': f'Missing required field: {field}'}, status=400)
+        
+        # Validate price
+        try:
+            price = float(data['price'])
+            if price < 0:
+                raise ValueError
+        except ValueError:
+            return JsonResponse({'error': 'Price must be a non-negative number'}, status=400)
+        
+        # Validate category
+        valid_categories = ['Main Course', 'Appetizers', 'Desserts', 'Beverages']
+        if data['category'] not in valid_categories:
+            return JsonResponse({'error': f'Invalid category. Must be one of: {valid_categories}'}, status=400)
+        
+        # Validate availability
+        valid_availabilities = ['Available', 'Unavailable']
+        if data['availability'] not in valid_availabilities:
+            return JsonResponse({'error': f'Invalid availability. Must be one of: {valid_availabilities}'}, status=400)
+        
+        # Handle image upload
+        image_url = ''
+        if image_file:
+            try:
+                # Validate image
+                img = Image.open(image_file)
+                img.verify()  # Verify image integrity
+                img = Image.open(image_file)  # Reopen after verify
+                img.thumbnail((200, 200))  # Resize to 200x200
+                buffered = BytesIO()
+                img.save(buffered, format=img.format or 'JPEG')
+                image_data = base64.b64encode(buffered.getvalue()).decode('utf-8')
+                image_url = f"data:image/{img.format.lower()};base64,{image_data}"
+            except Exception as e:
+                logger.error(f"Error processing image: {e}")
+                return JsonResponse({'error': 'Invalid image file'}, status=400)
+        else:
+            # Use placeholder image if none provided
+            image_url = 'https://placehold.co/200x200/cccccc/969696?text=Image'
+
+        # Prepare menu item data
+        menu_item = {
+            'name': data['name'],
+            'category': data['category'],
+            'price': float(data['price']),
+            'availability': data['availability'],
+            'description': data.get('description', ''),
+            'image': image_url,
+            'created_at': datetime.now().isoformat(),
+            'updated_at': datetime.now().isoformat()
+        }
+        
+        # Insert menu item into MongoDB
+        result = menu_items_collection.insert_one(menu_item)
+        
+        # Return the created menu item with ID
+        menu_item['_id'] = str(result.inserted_id)
+        
+        logger.info(f"Menu item created successfully: {result.inserted_id}")
+        return JsonResponse({
+            'message': 'Menu item created successfully',
+            'item_id': str(result.inserted_id),
+            'item': menu_item
+        }, status=201)
+    
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error creating menu item: {e}")
+        return JsonResponse({'error': 'Failed to create menu item', 'message': str(e)}, status=500)
+
+def get_menu_item(request, item_id):
+    """Retrieve a specific menu item by ID"""
+    try:
+        # Validate ObjectId format
+        if not ObjectId.is_valid(item_id):
+            return JsonResponse({'error': 'Invalid item ID format'}, status=400)
+        
+        # Find the menu item
+        item = menu_items_collection.find_one({'_id': ObjectId(item_id)})
+        
+        if not item:
+            return JsonResponse({'error': 'Menu item not found'}, status=404)
+        
+        # Convert ObjectId to string for JSON serialization
+        item['_id'] = str(item['_id'])
+        
+        return JsonResponse(item, status=200)
+    
+    except Exception as e:
+        logger.error(f"Error retrieving menu item {item_id}: {e}")
+        return JsonResponse({'error': 'Failed to retrieve menu item', 'message': str(e)}, status=500)
+
+def update_menu_item(request, item_id):
+    """Update a specific menu item"""
+    try:
+        # Validate ObjectId format
+        if not ObjectId.is_valid(item_id):
+            return JsonResponse({'error': 'Invalid item ID format'}, status=400)
+        
+        # Check if the request is multipart (contains file)
+        if 'multipart/form-data' in request.content_type.lower():
+            data = json.loads(request.POST.get('data', '{}'))
+            image_file = request.FILES.get('image')
+        else:
+            data = json.loads(request.body)
+            image_file = None
+
+        # Add updated timestamp
+        data['updated_at'] = datetime.now().isoformat()
+        
+        # Validate if price is being updated
+        if 'price' in data:
+            try:
+                price = float(data['price'])
+                if price < 0:
+                    raise ValueError
+            except ValueError:
+                return JsonResponse({'error': 'Price must be a non-negative number'}, status=400)
+        
+        # Validate if category is being updated
+        if 'category' in data:
+            valid_categories = ['Main Course', 'Appetizers', 'Desserts', 'Beverages']
+            if data['category'] not in valid_categories:
+                return JsonResponse({'error': f'Invalid category. Must be one of: {valid_categories}'}, status=400)
+        
+        # Validate if availability is being updated
+        if 'availability' in data:
+            valid_availabilities = ['Available', 'Unavailable']
+            if data['availability'] not in valid_availabilities:
+                return JsonResponse({'error': f'Invalid availability. Must be one of: {valid_availabilities}'}, status=400)
+        
+        # Handle image upload if provided
+        if image_file:
+            try:
+                img = Image.open(image_file)
+                img.verify()  # Verify image integrity
+                img = Image.open(image_file)  # Reopen after verify
+                img.thumbnail((200, 200))  # Resize to 200x200
+                buffered = BytesIO()
+                img.save(buffered, format=img.format or 'JPEG')
+                image_data = base64.b64encode(buffered.getvalue()).decode('utf-8')
+                data['image'] = f"data:image/{img.format.lower()};base64,{image_data}"
+            except Exception as e:
+                logger.error(f"Error processing image: {e}")
+                return JsonResponse({'error': 'Invalid image file'}, status=400)
+        
+        # Update the menu item
+        result = menu_items_collection.update_one(
+            {'_id': ObjectId(item_id)},
+            {'$set': data}
+        )
+        
+        if result.matched_count == 0:
+            return JsonResponse({'error': 'Menu item not found'}, status=404)
+        
+        # Retrieve and return updated menu item
+        updated_item = menu_items_collection.find_one({'_id': ObjectId(item_id)})
+        updated_item['_id'] = str(updated_item['_id'])
+        
+        logger.info(f"Menu item updated successfully: {item_id}")
+        return JsonResponse({
+            'message': 'Menu item updated successfully',
+            'item': updated_item
+        }, status=200)
+    
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error updating menu item {item_id}: {e}")
+        return JsonResponse({'error': 'Failed to update menu item', 'message': str(e)}, status=500)
+
+def delete_menu_item(request, item_id):
+    """Delete a specific menu item"""
+    try:
+        # Validate ObjectId format
+        if not ObjectId.is_valid(item_id):
+            return JsonResponse({'error': 'Invalid item ID format'}, status=400)
+        
+        # Delete the menu item
+        result = menu_items_collection.delete_one({'_id': ObjectId(item_id)})
+        
+        if result.deleted_count == 0:
+            return JsonResponse({'error': 'Menu item not found'}, status=404)
+        
+        logger.info(f"Menu item deleted successfully: {item_id}")
+        return JsonResponse({'message': 'Menu item deleted successfully'}, status=200)
+    
+    except Exception as e:
+        logger.error(f"Error deleting menu item {item_id}: {e}")
+        return JsonResponse({'error': 'Failed to delete menu item', 'message': str(e)}, status=500)
