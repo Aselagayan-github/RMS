@@ -11,9 +11,9 @@ urlpatterns = [
     path('admindashboard/', views.admin_view, name='admindashboard'),
     path('customerdashboard/', views.customer_view, name='customerdashboard'),
     path('usermanagement/', views.usermanage_view, name='usermanagement'),
-    path('order_management/', views.order_management_view, name='order_management'),  # Added for order management page
-    path('api/orders/', views.orders_api, name='orders_api'),  # API for GET/POST orders
-    path('api/orders/<str:order_id>/', views.order_detail_api, name='order_detail_api'),  # API for GET/PUT/DELETE specific order
-    path('api/order_statistics/', views.get_order_statistics, name='get_order_statistics'),  # Added for stats
-    path('api/orders/<str:order_id>/status/', views.update_order_status, name='update_order_status'),  # Added for status update
+    path('order_management/', views.order_management_view, name='order_management'),
+    path('api/orders/', views.orders_api, name='orders_api'),
+    path('api/orders/<str:order_id>/', views.order_detail_api, name='order_detail_api'),
+    path('api/order_statistics/', views.get_order_statistics, name='get_order_statistics'),
+    path('api/orders/<str:order_id>/status/', views.update_order_status, name='update_order_status'),
 ]
