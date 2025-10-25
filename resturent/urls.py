@@ -23,4 +23,9 @@ urlpatterns = [
     path('api/menu-items/<str:item_id>/', views.menu_item_detail_api, name='menu_item_detail_api'),
     path('api/deliveries/', views.deliveries_api, name='deliveries_api'),
     path('api/deliveries/<str:delivery_id>/', views.delivery_detail_api, name='delivery_detail_api'),
+    path('api/invoices/', views.invoices_api, name='invoices_api'),
+    path('api/invoices/<str:invoice_id>/', views.invoice_detail_api, name='invoice_detail_api'),
+    path('api/invoices/<str:invoice_id>/pdf/', views.generate_invoice_pdf, name='generate_invoice_pdf'),
+    path('api/sales_report/', views.sales_report, name='sales_report'),
+    path('api/customer_analytics/', views.customer_analytics, name='customer_analytics'),
 ]

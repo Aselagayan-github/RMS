@@ -6,7 +6,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from bson.objectid import ObjectId
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -15,6 +15,7 @@ import logging
 import base64
 from io import BytesIO
 from PIL import Image
+from reportlab.pdfgen import canvas
 
 # Set up logger
 logger = logging.getLogger(__name__)
@@ -26,7 +27,8 @@ users_collection = db['users']
 order_collection = db['order_table']
 bookings_collection = db['bookings']
 menu_items_collection = db['menu_items']
-deliveries_collection = db['deliveries']  # New collection for deliveries
+deliveries_collection = db['deliveries']
+invoices_collection = db['invoices']
 
 # Email credentials
 EMAIL_ADDRESS = 'aselagayan1010@gmail.com'
@@ -848,3 +850,295 @@ def delete_delivery(request, delivery_id):
     except Exception as e:
         logger.error(f"Error deleting delivery {delivery_id}: {e}")
         return JsonResponse({'error': 'Failed to delete delivery', 'message': str(e)}, status=500)
+
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
+def invoices_api(request):
+    if request.method == 'GET':
+        return get_all_invoices(request)
+    elif request.method == 'POST':
+        return create_invoice(request)
+
+@csrf_exempt
+@require_http_methods(["GET", "PUT", "DELETE"])
+def invoice_detail_api(request, invoice_id):
+    if request.method == 'GET':
+        return get_invoice(request, invoice_id)
+    elif request.method == 'PUT':
+        return update_invoice(request, invoice_id)
+    elif request.method == 'DELETE':
+        return delete_invoice(request, invoice_id)
+
+def get_all_invoices(request):
+    try:
+        status = request.GET.get('status')
+        customer_name = request.GET.get('customer_name')
+        limit = int(request.GET.get('limit', 100))
+        skip = int(request.GET.get('skip', 0))
+        query = {}
+        if status:
+            query['status'] = status
+        if customer_name:
+            query['customer_name'] = {'$regex': customer_name, '$options': 'i'}
+        invoices_cursor = invoices_collection.find(query).sort('created_at', -1).limit(limit).skip(skip)
+        invoices = []
+        for invoice in invoices_cursor:
+            invoice['_id'] = str(invoice['_id'])
+            if 'created_at' not in invoice:
+                invoice['created_at'] = datetime.now().isoformat()
+            invoices.append(invoice)
+        return JsonResponse(invoices, safe=False, status=200)
+    except Exception as e:
+        logger.error(f"Error retrieving invoices: {e}")
+        return JsonResponse({'error': 'Failed to retrieve invoices', 'message': str(e)}, status=500)
+
+def create_invoice(request):
+    try:
+        data = json.loads(request.body)
+        required_fields = ['customer_name', 'date', 'amount', 'status']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                return JsonResponse({'error': f'Missing required field: {field}'}, status=400)
+        try:
+            amount = float(data['amount'])
+            if amount < 0:
+                raise ValueError
+        except ValueError:
+            return JsonResponse({'error': 'Amount must be a non-negative number'}, status=400)
+        valid_statuses = ['Paid', 'Unpaid']
+        if data['status'] not in valid_statuses:
+            return JsonResponse({'error': f'Invalid status. Must be one of: {valid_statuses}'}, status=400)
+        data['created_at'] = datetime.now().isoformat()
+        data['updated_at'] = datetime.now().isoformat()
+        result = invoices_collection.insert_one(data)
+        data['_id'] = str(result.inserted_id)
+        logger.info(f"Invoice created successfully: {result.inserted_id}")
+        return JsonResponse({
+            'message': 'Invoice created successfully',
+            'invoice_id': str(result.inserted_id),
+            'invoice': data
+        }, status=201)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error creating invoice: {e}")
+        return JsonResponse({'error': 'Failed to create invoice', 'message': str(e)}, status=500)
+
+def get_invoice(request, invoice_id):
+    try:
+        if not ObjectId.is_valid(invoice_id):
+            return JsonResponse({'error': 'Invalid invoice ID format'}, status=400)
+        invoice = invoices_collection.find_one({'_id': ObjectId(invoice_id)})
+        if not invoice:
+            return JsonResponse({'error': 'Invoice not found'}, status=404)
+        invoice['_id'] = str(invoice['_id'])
+        return JsonResponse(invoice, status=200)
+    except Exception as e:
+        logger.error(f"Error retrieving invoice {invoice_id}: {e}")
+        return JsonResponse({'error': 'Failed to retrieve invoice', 'message': str(e)}, status=500)
+
+def update_invoice(request, invoice_id):
+    try:
+        if not ObjectId.is_valid(invoice_id):
+            return JsonResponse({'error': 'Invalid invoice ID format'}, status=400)
+        data = json.loads(request.body)
+        data['updated_at'] = datetime.now().isoformat()
+        if 'amount' in data:
+            try:
+                amount = float(data['amount'])
+                if amount < 0:
+                    raise ValueError
+            except ValueError:
+                return JsonResponse({'error': 'Amount must be a non-negative number'}, status=400)
+        if 'status' in data:
+            valid_statuses = ['Paid', 'Unpaid']
+            if data['status'] not in valid_statuses:
+                return JsonResponse({'error': f'Invalid status. Must be one of: {valid_statuses}'}, status=400)
+        result = invoices_collection.update_one(
+            {'_id': ObjectId(invoice_id)},
+            {'$set': data}
+        )
+        if result.matched_count == 0:
+            return JsonResponse({'error': 'Invoice not found'}, status=404)
+        updated_invoice = invoices_collection.find_one({'_id': ObjectId(invoice_id)})
+        updated_invoice['_id'] = str(updated_invoice['_id'])
+        logger.info(f"Invoice updated successfully: {invoice_id}")
+        return JsonResponse({
+            'message': 'Invoice updated successfully',
+            'invoice': updated_invoice
+        }, status=200)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error updating invoice {invoice_id}: {e}")
+        return JsonResponse({'error': 'Failed to update invoice', 'message': str(e)}, status=500)
+
+def delete_invoice(request, invoice_id):
+    try:
+        if not ObjectId.is_valid(invoice_id):
+            return JsonResponse({'error': 'Invalid invoice ID format'}, status=400)
+        result = invoices_collection.delete_one({'_id': ObjectId(invoice_id)})
+        if result.deleted_count == 0:
+            return JsonResponse({'error': 'Invoice not found'}, status=404)
+        logger.info(f"Invoice deleted successfully: {invoice_id}")
+        return JsonResponse({'message': 'Invoice deleted successfully'}, status=200)
+    except Exception as e:
+        logger.error(f"Error deleting invoice {invoice_id}: {e}")
+        return JsonResponse({'error': 'Failed to delete invoice', 'message': str(e)}, status=500)
+
+def generate_invoice_pdf(request, invoice_id):
+    try:
+        if not ObjectId.is_valid(invoice_id):
+            return HttpResponse("Invalid invoice ID format", status=400)
+        invoice = invoices_collection.find_one({'_id': ObjectId(invoice_id)})
+        if not invoice:
+            return HttpResponse("Invoice not found", status=404)
+        
+        # Create the HTTP response with PDF content type
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="invoice_{invoice_id}.pdf"'
+        
+        # Create the PDF object
+        p = canvas.Canvas(response)
+        
+        # Add content to the PDF
+        p.drawString(100, 800, f"Invoice #{invoice_id[-6:]}")  # Use last 6 chars for display
+        p.drawString(100, 780, f"Customer: {invoice['customer_name']}")
+        p.drawString(100, 760, f"Date: {invoice['date']}")
+        p.drawString(100, 740, f"Amount: ${invoice['amount']}")
+        p.drawString(100, 720, f"Status: {invoice['status']}")
+        
+        # Close the PDF object
+        p.save()
+        
+        return response
+    except Exception as e:
+        logger.error(f"Error generating PDF for invoice {invoice_id}: {e}")
+        return HttpResponse("Failed to generate PDF", status=500)
+
+def sales_report(request):
+    try:
+        start = request.GET.get('start')
+        end = request.GET.get('end')
+        query = {'status': 'Paid'}
+        if start or end:
+            date_query = {}
+            if start:
+                date_query['$gte'] = start
+            if end:
+                date_query['$lte'] = end
+            query['date'] = date_query
+        pipeline = [
+            {'$match': query},
+            {'$group': {
+                '_id': '$date',
+                'total_sales': {'$sum': {'$toDouble': '$amount'}}
+            }},
+            {'$sort': {'_id': 1}}
+        ]
+        results = list(invoices_collection.aggregate(pipeline))
+        data = {
+            'labels': [r['_id'] for r in results],
+            'sales': [round(r['total_sales'], 2) for r in results]
+        }
+        return JsonResponse(data, status=200)
+    except Exception as e:
+        logger.error(f"Error generating sales report: {e}")
+        return JsonResponse({'error': 'Failed to generate sales report', 'message': str(e)}, status=500)
+
+def customer_analytics(request):
+    try:
+        start = request.GET.get('start')
+        end = request.GET.get('end')
+        
+        # Total customers (all time)
+        total_customers = users_collection.count_documents({'usertype': 'Customer'})
+        
+        # For period-specific metrics
+        order_query = {'status': 'Completed'}
+        if start or end:
+            date_query = {}
+            if start:
+                date_query['$gte'] = f"{start}T00:00:00"
+            if end:
+                date_query['$lte'] = f"{end}T23:59:59"
+            order_query['created_at'] = date_query
+        
+        # New customers: customers with first order in period
+        # To find new, need to find min created_at per customer, count those >= start
+        new_customers_pipeline = [
+            {'$match': order_query},
+            {'$group': {
+                '_id': '$customer_name',
+                'first_order': {'$min': '$created_at'}
+            }},
+            {'$match': {
+                'first_order': {'$gte': start + 'T00:00:00' if start else '1900-01-01T00:00:00'}
+            }},
+            {'$count': 'new_customers'}
+        ]
+        new_customers_result = list(order_collection.aggregate(new_customers_pipeline))
+        new_customers = new_customers_result[0]['new_customers'] if new_customers_result else 0
+        
+        # Repeat customers: customers with >1 order in period
+        repeat_pipeline = [
+            {'$match': order_query},
+            {'$group': {
+                '_id': '$customer_name',
+                'order_count': {'$sum': 1}
+            }},
+            {'$match': {'order_count': {'$gt': 1}}},
+            {'$count': 'repeat_customers'}
+        ]
+        repeat_result = list(order_collection.aggregate(repeat_pipeline))
+        repeat_customers = repeat_result[0]['repeat_customers'] if repeat_result else 0
+        
+        # Average spend: avg total per customer in period
+        avg_spend_pipeline = [
+            {'$match': order_query},
+            {'$group': {
+                '_id': '$customer_name',
+                'total_spend': {'$sum': {'$toDouble': '$total'}}
+            }},
+            {'$group': {
+                '_id': None,
+                'avg_spend': {'$avg': '$total_spend'}
+            }}
+        ]
+        avg_spend_result = list(order_collection.aggregate(avg_spend_pipeline))
+        average_spend = avg_spend_result[0]['avg_spend'] if avg_spend_result else 0.0
+        
+        # Customer growth over time: daily new customers
+        growth_pipeline = [
+            {'$match': order_query},
+            {'$group': {
+                '_id': '$customer_name',
+                'first_order': {'$min': '$created_at'}
+            }},
+            {'$project': {
+                'date': {'$dateToString': {'format': '%Y-%m-%d', 'date': {'$toDate': '$first_order'}}}
+            }},
+            {'$group': {
+                '_id': '$date',
+                'count': {'$sum': 1}
+            }},
+            {'$sort': {'_id': 1}}
+        ]
+        growth_result = list(order_collection.aggregate(growth_pipeline))
+        growth_labels = [r['_id'] for r in growth_result]
+        growth_values = [r['count'] for r in growth_result]
+        
+        data = {
+            'total_customers': total_customers,
+            'new_customers': new_customers,
+            'repeat_customers': repeat_customers,
+            'average_spend': round(average_spend, 2),
+            'customer_growth': {
+                'labels': growth_labels,
+                'values': growth_values
+            }
+        }
+        return JsonResponse(data, status=200)
+    except Exception as e:
+        logger.error(f"Error generating customer analytics: {e}")
+        return JsonResponse({'error': 'Failed to generate customer analytics', 'message': str(e)}, status=500)
