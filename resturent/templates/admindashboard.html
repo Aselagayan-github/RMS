@@ -651,30 +651,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="bookings-tbody">
-                                        <tr>
-                                            <td>BK-001</td>
-                                            <td>Alice Johnson</td>
-                                            <td>2024-08-15, 19:30</td>
-                                            <td>4</td>
-                                            <td><span class="badge status-confirmed">Confirmed</span></td>
-                                            <td class="text-center"><button
-                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-booking-btn"><i
-                                                        class="fas fa-edit"></i></button><button
-                                                    class="btn btn-icon btn-sm btn-danger-custom delete-booking-btn"><i
-                                                        class="fas fa-trash-alt"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>BK-002</td>
-                                            <td>Bob Williams</td>
-                                            <td>2024-08-16, 20:00</td>
-                                            <td>2</td>
-                                            <td><span class="badge status-pending">Pending</span></td>
-                                            <td class="text-center"><button
-                                                    class="btn btn-icon btn-sm btn-primary-custom me-1 edit-booking-btn"><i
-                                                        class="fas fa-edit"></i></button><button
-                                                    class="btn btn-icon btn-sm btn-danger-custom delete-booking-btn"><i
-                                                        class="fas fa-trash-alt"></i></button></td>
-                                        </tr>
+                                        <!-- Orders will be loaded here -->
                                     </tbody>
                                 </table>
                             </div>
@@ -1929,279 +1906,6 @@
                     </div>
                 </div>
 
-                <script>
-                    // Invoice management variables
-                    let currentInvoiceId = null;
-
-                    // Initialize page
-                    document.addEventListener('DOMContentLoaded', function () {
-                        loadAllInvoices();
-
-                        // Add event listeners
-                        const generateInvoiceBtn = document.getElementById('generateInvoiceBtn');
-                        const saveInvoiceBtn = document.getElementById('saveInvoiceBtn');
-                        const invoicesTbody = document.getElementById('invoices-tbody');
-
-                        if (generateInvoiceBtn) {
-                            generateInvoiceBtn.addEventListener('click', openGenerateInvoiceModal);
-                        } else {
-                            console.error('Generate Invoice button not found');
-                        }
-
-                        if (saveInvoiceBtn) {
-                            saveInvoiceBtn.addEventListener('click', saveInvoice);
-                        } else {
-                            console.error('Save Invoice button not found');
-                        }
-
-                        // Add event listener for modal close buttons
-                        const closeModalButtons = document.querySelectorAll('#invoiceModal [data-bs-dismiss="modal"], #invoiceViewModal [data-bs-dismiss="modal"]');
-                        closeModalButtons.forEach(button => {
-                            button.addEventListener('click', () => {
-                                const form = document.getElementById('invoiceForm');
-                                if (form) {
-                                    form.reset();
-                                    document.getElementById('invoiceId').value = '';
-                                }
-                            });
-                        });
-
-                        // Add event listeners for view and download buttons
-                        if (invoicesTbody) {
-                            invoicesTbody.addEventListener('click', function (e) {
-                                const invoiceId = e.target.closest('tr').dataset.invoiceId;
-                                if (e.target.closest('.view-invoice-btn')) {
-                                    viewInvoice(invoiceId);
-                                } else if (e.target.closest('.download-invoice-btn')) {
-                                    downloadInvoice(invoiceId);
-                                }
-                            });
-                        } else {
-                            console.error('Invoices table body not found');
-                        }
-                    });
-
-                    // Open generate invoice modal
-                    function openGenerateInvoiceModal() {
-                        currentInvoiceId = null;
-                        const modalLabel = document.getElementById('invoiceModalLabel');
-                        const form = document.getElementById('invoiceForm');
-                        const invoiceIdInput = document.getElementById('invoiceId');
-
-                        if (modalLabel && form && invoiceIdInput) {
-                            modalLabel.textContent = 'Generate New Invoice';
-                            form.reset();
-                            invoiceIdInput.value = '';
-                            const modal = new bootstrap.Modal(document.getElementById('invoiceModal'));
-                            modal.show();
-                        } else {
-                            console.error('Required modal elements not found');
-                            alert('Error opening modal: Form elements missing.');
-                        }
-                    }
-
-                    async function saveInvoice(e) {
-                        e.preventDefault(); // Prevent default form submission
-
-                        const customerName = document.getElementById('invoiceCustomerName')?.value.trim();
-                        const date = document.getElementById('invoiceDate')?.value;
-                        const amount = document.getElementById('invoiceAmount')?.value;
-                        const status = document.getElementById('invoiceStatus')?.value;
-                        const paymentType = document.getElementById('invoicePaymentType')?.value;
-
-                        // Validate form inputs
-                        if (!customerName || !date || !amount || !status || !paymentType) {
-                            console.error('Validation failed: Missing required fields', { customerName, date, amount, status, paymentType });
-                            alert('Please fill out all required fields.');
-                            return;
-                        }
-
-                        if (isNaN(amount) || parseFloat(amount) < 0) {
-                            console.error('Validation failed: Invalid amount', { amount });
-                            alert('Amount must be a non-negative number.');
-                            return;
-                        }
-
-                        const data = {
-                            customer_name: customerName,
-                            date: date,
-                            amount: parseFloat(amount),
-                            status: status,
-                            payment_type: paymentType
-                        };
-
-                        try {
-                            let response;
-                            const headers = {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': getCookie('csrfmiddlewaretoken')
-                            };
-
-                            console.log('Sending invoice data:', data);
-
-                            if (currentInvoiceId) {
-                                // Update existing invoice
-                                response = await fetch(`/api/invoices/${currentInvoiceId}/`, {
-                                    method: 'PUT',
-                                    headers: headers,
-                                    body: JSON.stringify(data)
-                                });
-                            } else {
-                                // Create new invoice
-                                response = await fetch('/api/invoices/', {
-                                    method: 'POST',
-                                    headers: headers,
-                                    body: JSON.stringify(data)
-                                });
-                            }
-
-                            const result = await response.json();
-                            if (response.ok) {
-                                alert(currentInvoiceId ? 'Invoice updated successfully!' : 'Invoice created successfully!');
-                                console.log('Invoice saved:', result);
-                                const modal = bootstrap.Modal.getInstance(document.getElementById('invoiceModal'));
-                                modal.hide();
-                                loadAllInvoices(); // Refresh table
-                            } else {
-                                console.error('Error saving invoice:', result);
-                                alert('Error saving invoice: ' + (result.error || result.message || 'Unknown error'));
-                            }
-                        } catch (error) {
-                            console.error('Network or unexpected error saving invoice:', error);
-                            alert('Error saving invoice. Please check your network or try again.');
-                        }
-                    }
-
-                    // Load all invoices
-                    async function loadAllInvoices() {
-                        try {
-                            const response = await fetch('/api/invoices/');
-                            if (response.ok) {
-                                const invoices = await response.json();
-                                console.log('Invoices loaded:', invoices);
-                                displayInvoices(invoices);
-                            } else {
-                                const error = await response.json();
-                                console.error('Error loading invoices:', error);
-                                alert('Failed to load invoices: ' + (error.error || error.message || 'Unknown error'));
-                            }
-                        } catch (error) {
-                            console.error('Error loading invoices:', error);
-                            alert('Error loading invoices. Please check your network or try again.');
-                        }
-                    }
-
-                    // Display invoices in table
-                    function displayInvoices(invoices) {
-                        const tbody = document.getElementById('invoices-tbody');
-                        if (!tbody) {
-                            console.error('Invoices table body not found');
-                            alert('Error: Invoices table not found.');
-                            return;
-                        }
-                        tbody.innerHTML = '';
-
-                        invoices.forEach(invoice => {
-                            const row = document.createElement('tr');
-                            row.dataset.invoiceId = invoice._id;
-
-                            const statusClass = invoice.status === 'Paid' ? 'status-paid' : 'status-unpaid';
-
-                            row.innerHTML = `
-            <td>${invoice._id}</td>
-            <td>${invoice.customer_name}</td>
-            <td>${invoice.date}</td>
-            <td>$${parseFloat(invoice.amount).toFixed(2)}</td>
-            <td><span class="badge ${statusClass}">${invoice.status}</span></td>
-            <td class="text-center">
-                <button class="btn btn-icon btn-sm btn-info-custom view-invoice-btn" title="View">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-icon btn-sm btn-secondary-custom download-invoice-btn" title="Download PDF">
-                    <i class="fas fa-print"></i>
-                </button>
-            </td>
-        `;
-                            tbody.appendChild(row);
-                        });
-                    }
-
-                    // View invoice details
-                    async function viewInvoice(invoiceId) {
-                        try {
-                            const response = await fetch(`/api/invoices/${invoiceId}/`);
-                            if (response.ok) {
-                                const invoice = await response.json();
-                                const modalBody = document.getElementById('invoiceViewModalBody');
-                                if (modalBody) {
-                                    let itemsHtml = '';
-                                    if (invoice.items && invoice.items.length > 0) {
-                                        itemsHtml = '<h5>Order Items:</h5><ul>';
-                                        invoice.items.forEach(item => {
-                                            itemsHtml += `<li>${item.name} - $${parseFloat(item.price).toFixed(2)} x ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}</li>`;
-                                        });
-                                        itemsHtml += '</ul>';
-                                    }
-                                    modalBody.innerHTML = `
-                    <p><strong>Invoice #:</strong> ${invoice._id}</p>
-                    <p><strong>Customer:</strong> ${invoice.customer_name}</p>
-                    <p><strong>Date:</strong> ${invoice.date}</p>
-                    <p><strong>Amount:</strong> $${parseFloat(invoice.amount).toFixed(2)}</p>
-                    <p><strong>Status:</strong> ${invoice.status}</p>
-                    ${itemsHtml}
-                `;
-                                    const modal = new bootstrap.Modal(document.getElementById('invoiceViewModal'));
-                                    modal.show();
-                                } else {
-                                    console.error('Invoice view modal body not found');
-                                    alert('Error opening view modal: Modal body missing.');
-                                }
-                            } else {
-                                const error = await response.json();
-                                console.error('Error loading invoice:', error);
-                                alert('Error loading invoice details: ' + (error.error || error.message || 'Unknown error'));
-                            }
-                        } catch (error) {
-                            console.error('Error loading invoice:', error);
-                            alert('Error loading invoice details. Please check your network or try again.');
-                        }
-                    }
-
-                    // Download invoice PDF
-                    function downloadInvoice(invoiceId) {
-                        const url = `/api/invoices/${invoiceId}/pdf/`;
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = `invoice_${invoiceId}.pdf`;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    }
-
-                    function getCookie(name) {
-                        let cookieValue = null;
-                        const csrfInput = document.getElementById('csrfToken');
-                        if (csrfInput) {
-                            cookieValue = csrfInput.value;
-                        }
-                        if (!cookieValue && document.cookie && document.cookie !== '') {
-                            const cookies = document.cookie.split(';');
-                            for (let i = 0; i < cookies.length; i++) {
-                                const cookie = cookies[i].trim();
-                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                    break;
-                                }
-                            }
-                        }
-                        if (!cookieValue) {
-                            console.error('CSRF token not found');
-                            alert('CSRF token missing. Please reload the page.');
-                        }
-                        return cookieValue;
-                    }
-                </script>
-
                 <!-- Sales Reports View -->
                 <div id="sales-reports-view" class="view">
                     <h2>Sales Reports</h2>
@@ -2679,6 +2383,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </main>
     </div>
@@ -2782,6 +2487,88 @@
                 }
                 return cookieValue;
             }
+        });
+    </script>
+    <!-- Add this new script block for navigation handling -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('#main-menu a');
+            const views = document.querySelectorAll('.view');
+            const title = document.getElementById('current-view-title');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const viewName = this.getAttribute('data-view');
+                    const viewId = viewName + '-view';
+
+                    // Hide all views
+                    views.forEach(view => {
+                        view.classList.remove('active-view');
+                    });
+
+                    // Show the selected view
+                    const targetView = document.getElementById(viewId);
+                    if (targetView) {
+                        targetView.classList.add('active-view');
+                    } else {
+                        console.error(`View with ID ${viewId} not found.`);
+                    }
+
+                    // Update active menu item
+                    navLinks.forEach(l => l.classList.remove('active-menu'));
+                    this.classList.add('active-menu');
+
+                    // Update page title
+                    title.textContent = this.textContent.trim();
+
+                    // Special handling for logout
+                    if (viewName === 'logout') {
+                        // You can add logout logic here, e.g., redirect to logout URL
+                        // For now, just show the logout view
+                    }
+                });
+            });
+
+            // Dark mode toggle
+            document.getElementById('theme-toggle').addEventListener('click', function () {
+                document.body.classList.toggle('dark-mode');
+                // Optional: Save preference to localStorage
+                if (document.body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // Load saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+
+            // Initialize charts (example for userPieChart)
+            const userPieChartCtx = document.getElementById('userPieChart').getContext('2d');
+            new Chart(userPieChartCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Admins', 'Customers', 'Staff'],
+                    datasets: [{
+                        data: [10, 50, 20],
+                        backgroundColor: ['#3498db', '#1abc9c', '#e74c3c']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+
+            // Add similar initialization for other charts like salesBarChart if needed
         });
     </script>
 </body>

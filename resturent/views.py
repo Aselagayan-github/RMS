@@ -1,3 +1,4 @@
+# views.py
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from pymongo import MongoClient
@@ -5,7 +6,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from bson.objectid import ObjectId
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -14,8 +15,6 @@ import logging
 import base64
 from io import BytesIO
 from PIL import Image
-import os
-import subprocess
 
 # Set up logger
 logger = logging.getLogger(__name__)
@@ -27,8 +26,7 @@ users_collection = db['users']
 order_collection = db['order_table']
 bookings_collection = db['bookings']
 menu_items_collection = db['menu_items']
-deliveries_collection = db['deliveries']
-invoices_collection = db['invoices']  # New collection for invoices
+deliveries_collection = db['deliveries']  # New collection for deliveries
 
 # Email credentials
 EMAIL_ADDRESS = 'aselagayan1010@gmail.com'
@@ -36,7 +34,6 @@ EMAIL_PASSWORD = 'ffyyreefwwtuelyb'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 
-# Existing views
 def main_page(request):
     return render(request, 'main.html')
 
@@ -127,8 +124,6 @@ def send_email(to_email, user_name):
 def order_management_view(request):
     return render(request, 'order_management.html')
 
-# ========== ORDER MANAGEMENT API ENDPOINTS ==========
-
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def orders_api(request):
@@ -200,8 +195,6 @@ def create_order(request):
             data['status'] = 'Pending'
         result = order_collection.insert_one(data)
         data['_id'] = str(result.inserted_id)
-        # Create invoice on order creation
-        create_invoice_from_order(data)
         logger.info(f"Order created successfully: {result.inserted_id}")
         return JsonResponse({
             'message': 'Order created successfully',
@@ -342,8 +335,6 @@ def update_order_status(request, order_id):
         logger.error(f"Error updating order status {order_id}: {e}")
         return JsonResponse({'error': 'Failed to update order status', 'message': str(e)}, status=500)
 
-# ========== BOOKING MANAGEMENT API ENDPOINTS ==========
-
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def bookings_api(request):
@@ -481,8 +472,6 @@ def delete_booking(request, booking_id):
     except Exception as e:
         logger.error(f"Error deleting booking {booking_id}: {e}")
         return JsonResponse({'error': 'Failed to delete booking', 'message': str(e)}, status=500)
-
-# ========== MENU MANAGEMENT API ENDPOINTS ==========
 
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
@@ -675,11 +664,13 @@ def delete_menu_item(request, item_id):
         logger.error(f"Error deleting menu item {item_id}: {e}")
         return JsonResponse({'error': 'Failed to delete menu item', 'message': str(e)}, status=500)
 
-# ========== DELIVERY MANAGEMENT API ENDPOINTS ==========
-
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def deliveries_api(request):
+    """
+    GET: Retrieve all deliveries
+    POST: Create a new delivery
+    """
     if request.method == 'GET':
         return get_all_deliveries(request)
     elif request.method == 'POST':
@@ -688,6 +679,11 @@ def deliveries_api(request):
 @csrf_exempt
 @require_http_methods(["GET", "PUT", "DELETE"])
 def delivery_detail_api(request, delivery_id):
+    """
+    GET: Retrieve a specific delivery
+    PUT: Update a specific delivery
+    DELETE: Delete a specific delivery
+    """
     if request.method == 'GET':
         return get_delivery(request, delivery_id)
     elif request.method == 'PUT':
@@ -696,48 +692,72 @@ def delivery_detail_api(request, delivery_id):
         return delete_delivery(request, delivery_id)
 
 def get_all_deliveries(request):
+    """Retrieve all deliveries from MongoDB"""
     try:
+        # Get query parameters for filtering and pagination
         status = request.GET.get('status')
         customer_name = request.GET.get('customer_name')
         limit = int(request.GET.get('limit', 100))
         skip = int(request.GET.get('skip', 0))
+        
+        # Build query
         query = {}
         if status:
             query['status'] = status
         if customer_name:
             query['customer_name'] = {'$regex': customer_name, '$options': 'i'}
+        
+        # Retrieve deliveries with sorting (newest first)
         deliveries_cursor = deliveries_collection.find(query).sort('created_at', -1).limit(limit).skip(skip)
         deliveries = []
+        
         for delivery in deliveries_cursor:
+            # Convert ObjectId to string for JSON serialization
             delivery['_id'] = str(delivery['_id'])
+            # Ensure created_at exists
             if 'created_at' not in delivery:
                 delivery['created_at'] = datetime.now().isoformat()
             deliveries.append(delivery)
+        
         return JsonResponse(deliveries, safe=False, status=200)
+    
     except Exception as e:
         logger.error(f"Error retrieving deliveries: {e}")
         return JsonResponse({'error': 'Failed to retrieve deliveries', 'message': str(e)}, status=500)
 
 def create_delivery(request):
+    """Create a new delivery"""
     try:
         data = json.loads(request.body)
+        
+        # Validate required fields
         required_fields = ['order_id', 'customer_name', 'address', 'driver', 'status']
         for field in required_fields:
             if field not in data or not data[field]:
                 return JsonResponse({'error': f'Missing required field: {field}'}, status=400)
+        
+        # Validate status
         valid_statuses = ['Ready for Pickup', 'Out for Delivery', 'Delivered', 'Cancelled']
         if data['status'] not in valid_statuses:
             return JsonResponse({'error': f'Invalid status. Must be one of: {valid_statuses}'}, status=400)
+        
+        # Add timestamps
         data['created_at'] = datetime.now().isoformat()
         data['updated_at'] = datetime.now().isoformat()
+        
+        # Insert delivery into MongoDB
         result = deliveries_collection.insert_one(data)
+        
+        # Return the created delivery with ID
         data['_id'] = str(result.inserted_id)
+        
         logger.info(f"Delivery created successfully: {result.inserted_id}")
         return JsonResponse({
             'message': 'Delivery created successfully',
             'delivery_id': str(result.inserted_id),
             'delivery': data
         }, status=201)
+    
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     except Exception as e:
@@ -745,44 +765,64 @@ def create_delivery(request):
         return JsonResponse({'error': 'Failed to create delivery', 'message': str(e)}, status=500)
 
 def get_delivery(request, delivery_id):
+    """Retrieve a specific delivery by ID"""
     try:
+        # Validate ObjectId format
         if not ObjectId.is_valid(delivery_id):
             return JsonResponse({'error': 'Invalid delivery ID format'}, status=400)
+        
+        # Find the delivery
         delivery = deliveries_collection.find_one({'_id': ObjectId(delivery_id)})
+        
         if not delivery:
             return JsonResponse({'error': 'Delivery not found'}, status=404)
+        
+        # Convert ObjectId to string for JSON serialization
         delivery['_id'] = str(delivery['_id'])
+        
         return JsonResponse(delivery, status=200)
+    
     except Exception as e:
         logger.error(f"Error retrieving delivery {delivery_id}: {e}")
         return JsonResponse({'error': 'Failed to retrieve delivery', 'message': str(e)}, status=500)
 
 def update_delivery(request, delivery_id):
+    """Update a specific delivery"""
     try:
+        # Validate ObjectId format
         if not ObjectId.is_valid(delivery_id):
             return JsonResponse({'error': 'Invalid delivery ID format'}, status=400)
+        
         data = json.loads(request.body)
+        
+        # Add updated timestamp
         data['updated_at'] = datetime.now().isoformat()
+        
+        # Validate if status is being updated
         if 'status' in data:
             valid_statuses = ['Ready for Pickup', 'Out for Delivery', 'Delivered', 'Cancelled']
             if data['status'] not in valid_statuses:
                 return JsonResponse({'error': f'Invalid status. Must be one of: {valid_statuses}'}, status=400)
+        
+        # Update the delivery
         result = deliveries_collection.update_one(
             {'_id': ObjectId(delivery_id)},
             {'$set': data}
         )
+        
         if result.matched_count == 0:
             return JsonResponse({'error': 'Delivery not found'}, status=404)
+        
+        # Retrieve and return updated delivery
         updated_delivery = deliveries_collection.find_one({'_id': ObjectId(delivery_id)})
         updated_delivery['_id'] = str(updated_delivery['_id'])
-        # Create invoice if delivery status is updated to 'Delivered'
-        if data.get('status') == 'Delivered':
-            create_invoice_from_delivery(updated_delivery)
+        
         logger.info(f"Delivery updated successfully: {delivery_id}")
         return JsonResponse({
             'message': 'Delivery updated successfully',
             'delivery': updated_delivery
         }, status=200)
+    
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     except Exception as e:
@@ -790,298 +830,21 @@ def update_delivery(request, delivery_id):
         return JsonResponse({'error': 'Failed to update delivery', 'message': str(e)}, status=500)
 
 def delete_delivery(request, delivery_id):
+    """Delete a specific delivery"""
     try:
+        # Validate ObjectId format
         if not ObjectId.is_valid(delivery_id):
             return JsonResponse({'error': 'Invalid delivery ID format'}, status=400)
+        
+        # Delete the delivery
         result = deliveries_collection.delete_one({'_id': ObjectId(delivery_id)})
+        
         if result.deleted_count == 0:
             return JsonResponse({'error': 'Delivery not found'}, status=404)
+        
         logger.info(f"Delivery deleted successfully: {delivery_id}")
         return JsonResponse({'message': 'Delivery deleted successfully'}, status=200)
+    
     except Exception as e:
         logger.error(f"Error deleting delivery {delivery_id}: {e}")
         return JsonResponse({'error': 'Failed to delete delivery', 'message': str(e)}, status=500)
-
-# ========== INVOICE MANAGEMENT API ENDPOINTS ==========
-
-def create_invoice_from_order(order):
-    """Create an invoice from an order"""
-    try:
-        # Check if an invoice already exists for this order
-        existing_invoice = invoices_collection.find_one({'order_id': order['_id']})
-        if existing_invoice:
-            logger.info(f"Invoice already exists for order {order['_id']}")
-            return
-        invoice_data = {
-            'order_id': order['_id'],
-            'customer_name': order['customer_name'],
-            'date': order['created_at'].split('T')[0],  # Format as YYYY-MM-DD
-            'amount': float(order['total']),
-            'status': 'Unpaid' if order['status'] in ['Pending', 'Preparing', 'Ready'] else 'Paid',
-            'items': order.get('items', []),  # Include order items for PDF
-            'created_at': datetime.now().isoformat(),
-            'updated_at': datetime.now().isoformat()
-        }
-        result = invoices_collection.insert_one(invoice_data)
-        logger.info(f"Invoice created from order: {result.inserted_id}")
-    except Exception as e:
-        logger.error(f"Error creating invoice from order {order['_id']}: {e}")
-
-def create_invoice_from_delivery(delivery):
-    """Create an invoice from a delivery"""
-    try:
-        # Check if an invoice already exists for this delivery
-        existing_invoice = invoices_collection.find_one({'delivery_id': delivery['_id']})
-        if existing_invoice:
-            logger.info(f"Invoice already exists for delivery {delivery['_id']}")
-            return
-        # Fetch associated order to get amount and items
-        order = order_collection.find_one({'_id': ObjectId(delivery['order_id'])}) if ObjectId.is_valid(delivery['order_id']) else None
-        invoice_data = {
-            'delivery_id': delivery['_id'],
-            'order_id': delivery['order_id'],
-            'customer_name': delivery['customer_name'],
-            'date': delivery['created_at'].split('T')[0],  # Format as YYYY-MM-DD
-            'amount': float(order['total']) if order else 0.0,
-            'status': 'Paid' if delivery['status'] == 'Delivered' else 'Unpaid',
-            'items': order.get('items', []) if order else [],  # Include order items if available
-            'created_at': datetime.now().isoformat(),
-            'updated_at': datetime.now().isoformat()
-        }
-        result = invoices_collection.insert_one(invoice_data)
-        logger.info(f"Invoice created from delivery: {result.inserted_id}")
-    except Exception as e:
-        logger.error(f"Error creating invoice from delivery {delivery['_id']}: {e}")
-
-@csrf_exempt
-@require_http_methods(["GET", "POST"])
-def invoices_api(request):
-    if request.method == 'GET':
-        return get_all_invoices(request)
-    elif request.method == 'POST':
-        return create_invoice(request)
-
-@csrf_exempt
-@require_http_methods(["GET", "PUT", "DELETE"])
-def invoice_detail_api(request, invoice_id):
-    if request.method == 'GET':
-        return get_invoice(request, invoice_id)
-    elif request.method == 'PUT':
-        return update_invoice(request, invoice_id)
-    elif request.method == 'DELETE':
-        return delete_invoice(request, invoice_id)
-
-@require_http_methods(["GET"])
-def invoice_pdf(request, invoice_id):
-    """Generate PDF for a specific invoice using LaTeX"""
-    try:
-        if not ObjectId.is_valid(invoice_id):
-            return JsonResponse({'error': 'Invalid invoice ID format'}, status=400)
-        
-        invoice = invoices_collection.find_one({'_id': ObjectId(invoice_id)})
-        if not invoice:
-            return JsonResponse({'error': 'Invoice not found'}, status=404)
-        
-        # Generating LaTeX code for the invoice
-        latex_content = r"""
-        \documentclass[a4paper]{article}
-        \usepackage[utf8]{inputenc}
-        \usepackage{geometry}
-        \usepackage{array}
-        \usepackage{booktabs}
-        \usepackage{parskip}
-        \geometry{margin=1in}
-        \begin{document}
-        \begin{center}
-            \textbf{\Large Invoice} \\
-            \vspace{0.5cm}
-        \end{center}
-        \noindent
-        \textbf{Invoice \#:} """ + str(invoice['_id']) + r""" \\
-        \textbf{Customer:} """ + invoice['customer_name'] + r""" \\
-        \textbf{Date:} """ + invoice['date'] + r""" \\
-        \textbf{Amount:} \$""" + f"{invoice['amount']:.2f}" + r""" \\
-        \textbf{Status:} """ + invoice['status'] + r""" \\
-        \vspace{0.5cm}
-        \begin{center}
-            \textbf{Order Details}
-        \end{center}
-        \begin{tabular}{p{5cm} p{3cm} p{2cm} p{3cm}}
-            \toprule
-            \textbf{Item} & \textbf{Price} & \textbf{Quantity} & \textbf{Total} \\
-            \midrule
-        """
-        for item in invoice.get('items', []):
-            total = float(item['price']) * int(item['quantity'])
-            latex_content += f"    {item['name']} & \${item['price']} & {item['quantity']} & \${total:.2f} \\\\ \n"
-        latex_content += r"""
-            \bottomrule
-        \end{tabular}
-        \vspace{0.5cm}
-        \noindent
-        \textbf{Total Amount:} \$""" + f"{invoice['amount']:.2f}" + r""" \\
-        \end{document}
-        """
-        
-        # Writing LaTeX content to a temporary file
-        latex_file_path = f"/tmp/invoice_{invoice_id}.tex"
-        pdf_file_path = f"/tmp/invoice_{invoice_id}.pdf"
-        with open(latex_file_path, 'w') as f:
-            f.write(latex_content)
-        
-        # Compiling LaTeX to PDF using pdflatex
-        try:
-            subprocess.run(
-                ['latexmk', '-pdf', '-pdflatex=pdflatex', latex_file_path],
-                check=True,
-                capture_output=True,
-                text=True
-            )
-        except subprocess.CalledProcessError as e:
-            logger.error(f"Error compiling LaTeX for invoice {invoice_id}: {e.stderr}")
-            return JsonResponse({'error': 'Failed to generate PDF', 'message': str(e)}, status=500)
-        
-        # Reading the generated PDF
-        with open(pdf_file_path, 'rb') as f:
-            pdf_data = f.read()
-        
-        # Cleaning up temporary files
-        for ext in ['.tex', '.pdf', '.aux', '.log', '.fls', '.fdb_latexmk']:
-            try:
-                os.remove(f"/tmp/invoice_{invoice_id}{ext}")
-            except FileNotFoundError:
-                pass
-        
-        # Returning the PDF
-        response = HttpResponse(pdf_data, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="invoice_{invoice_id}.pdf"'
-        return response
-    
-    except Exception as e:
-        logger.error(f"Error generating PDF for invoice {invoice_id}: {e}")
-        return JsonResponse({'error': 'Failed to generate PDF', 'message': str(e)}, status=500)
-
-def get_all_invoices(request):
-    try:
-        status = request.GET.get('status')
-        customer_name = request.GET.get('customer_name')
-        limit = int(request.GET.get('limit', 100))
-        skip = int(request.GET.get('skip', 0))
-        query = {}
-        if status:
-            query['status'] = status
-        if customer_name:
-            query['customer_name'] = {'$regex': customer_name, '$options': 'i'}
-        invoices_cursor = invoices_collection.find(query).sort('created_at', -1).limit(limit).skip(skip)
-        invoices = []
-        for invoice in invoices_cursor:
-            invoice['_id'] = str(invoice['_id'])
-            if 'created_at' not in invoice:
-                invoice['created_at'] = datetime.now().isoformat()
-            invoices.append(invoice)
-        return JsonResponse(invoices, safe=False, status=200)
-    except Exception as e:
-        logger.error(f"Error retrieving invoices: {e}")
-        return JsonResponse({'error': 'Failed to retrieve invoices', 'message': str(e)}, status=500)
-
-
-def create_invoice(request):
-    try:
-        data = json.loads(request.body)
-        required_fields = ['customer_name', 'date', 'amount', 'status', 'payment_type']
-        for field in required_fields:
-            if field not in data or not data[field]:
-                return JsonResponse({'error': f'Missing required field: {field}'}, status=400)
-        try:
-            amount = float(data['amount'])
-            if amount < 0:
-                raise ValueError
-        except ValueError:
-            return JsonResponse({'error': 'Amount must be a non-negative number'}, status=400)
-        valid_statuses = ['Paid', 'Unpaid']
-        if data['status'] not in valid_statuses:
-            return JsonResponse({'error': f'Invalid status. Must be one of: {valid_statuses}'}, status=400)
-        valid_payment_types = ['Cash', 'Credit Card', 'Online Payment']
-        if data['payment_type'] not in valid_payment_types:
-            return JsonResponse({'error': f'Invalid payment type. Must be one of: {valid_payment_types}'}, status=400)
-        data['created_at'] = datetime.now().isoformat()
-        data['updated_at'] = datetime.now().isoformat()
-        result = invoices_collection.insert_one(data)
-        data['_id'] = str(result.inserted_id)
-        logger.info(f"Invoice created successfully: {result.inserted_id}")
-        return JsonResponse({
-            'message': 'Invoice created successfully',
-            'invoice_id': str(result.inserted_id),
-            'invoice': data
-        }, status=201)
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
-    except Exception as e:
-        logger.error(f"Error creating invoice: {e}")
-        return JsonResponse({'error': 'Failed to create invoice', 'message': str(e)}, status=500)
-
-def update_invoice(request, invoice_id):
-    try:
-        if not ObjectId.is_valid(invoice_id):
-            return JsonResponse({'error': 'Invalid invoice ID format'}, status=400)
-        data = json.loads(request.body)
-        data['updated_at'] = datetime.now().isoformat()
-        if 'amount' in data:
-            try:
-                amount = float(data['amount'])
-                if amount < 0:
-                    raise ValueError
-            except ValueError:
-                return JsonResponse({'error': 'Amount must be a non-negative number'}, status=400)
-        if 'status' in data:
-            valid_statuses = ['Paid', 'Unpaid']
-            if data['status'] not in valid_statuses:
-                return JsonResponse({'error': f'Invalid status. Must be one of: {valid_statuses}'}, status=400)
-        if 'payment_type' in data:
-            valid_payment_types = ['Cash', 'Credit Card', 'Online Payment']
-            if data['payment_type'] not in valid_payment_types:
-                return JsonResponse({'error': f'Invalid payment type. Must be one of: {valid_payment_types}'}, status=400)
-        result = invoices_collection.update_one(
-            {'_id': ObjectId(invoice_id)},
-            {'$set': data}
-        )
-        if result.matched_count == 0:
-            return JsonResponse({'error': 'Invoice not found'}, status=404)
-        updated_invoice = invoices_collection.find_one({'_id': ObjectId(invoice_id)})
-        updated_invoice['_id'] = str(updated_invoice['_id'])
-        logger.info(f"Invoice updated successfully: {invoice_id}")
-        return JsonResponse({
-            'message': 'Invoice updated successfully',
-            'invoice': updated_invoice
-        }, status=200)
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
-    except Exception as e:
-        logger.error(f"Error updating invoice {invoice_id}: {e}")
-        return JsonResponse({'error': 'Failed to update invoice', 'message': str(e)}, status=500)
-
-def get_invoice(request, invoice_id):
-    try:
-        if not ObjectId.is_valid(invoice_id):
-            return JsonResponse({'error': 'Invalid invoice ID format'}, status=400)
-        invoice = invoices_collection.find_one({'_id': ObjectId(invoice_id)})
-        if not invoice:
-            return JsonResponse({'error': 'Invoice not found'}, status=404)
-        invoice['_id'] = str(invoice['_id'])
-        return JsonResponse(invoice, status=200)
-    except Exception as e:
-        logger.error(f"Error retrieving invoice {invoice_id}: {e}")
-        return JsonResponse({'error': 'Failed to retrieve invoice', 'message': str(e)}, status=500)
-
-def delete_invoice(request, invoice_id):
-    try:
-        if not ObjectId.is_valid(invoice_id):
-            return JsonResponse({'error': 'Invalid invoice ID format'}, status=400)
-        result = invoices_collection.delete_one({'_id': ObjectId(invoice_id)})
-        if result.deleted_count == 0:
-            return JsonResponse({'error': 'Invoice not found'}, status=404)
-        logger.info(f"Invoice deleted successfully: {invoice_id}")
-        return JsonResponse({'message': 'Invoice deleted successfully'}, status=200)
-    except Exception as e:
-        logger.error(f"Error deleting invoice {invoice_id}: {e}")
-        return JsonResponse({'error': 'Failed to delete invoice', 'message': str(e)}, status=500)
